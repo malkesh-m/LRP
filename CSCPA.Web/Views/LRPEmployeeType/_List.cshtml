@@ -1,0 +1,103 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Employee Type</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPEmployeeTypeList','EmployeeTypeList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','EmployeeTypeList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'EmployeeTypeList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPEmployeeTypeList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPEmployeeTypeList','EmployeeTypeList') }")
+                            )
+                         @*   @(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPEmployeeType") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPEmployeeTypeListModel>()
+                        .ID("LRPEmployeeTypeList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpEmployeeTypeList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpEmployeeTypeList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPEmployeeType")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                           // editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpEmployeeTypeList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Name);
+
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { lrpEmployeeTypeAddEdit.showModel(e, lrpEmployeeTypeList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { lrpEmployeeTypeList.onRowRemoving(e); }");
+                           // b.Add().Name(GridColumnButtonName.Delete);
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true)).OnRowRemoving("lrpEmployeeTypeList.OnRowRemoving")
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpEmployeeTypeList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "User Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/UserAccount/_List.cshtml"); }
+
+<script src="~/scripts/userAccount.js" asp-append-version="true"></script>

@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "User Account Role Permission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/UserAccountRolePermission/_List.cshtml"); }
+
+<script src="~/scripts/userAccountRolePermission.js" asp-append-version="true"></script>

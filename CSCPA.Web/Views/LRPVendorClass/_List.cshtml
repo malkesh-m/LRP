@@ -1,0 +1,102 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Vendor Class</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPVendorClassList','VendorClassList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','VendorClassList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'VendorClassList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPVendorClassList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPVendorClassList','VendorClassList') }")
+                            )
+                          @*  @(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPVendorClass") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPVendorClassListModel>()
+                        .ID("LRPVendorClassList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpVendorClassList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpVendorClassList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPVendorClass")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpVendorClassList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.VendorClassNo);
+
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { lrpVendorClassAddEdit.showModel(e, lrpVendorClassList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { lrpVendorClassList.onRowRemoving(e); }");
+
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpVendorClassList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

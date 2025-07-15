@@ -1,0 +1,76 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPVendorVoucherAddEditModel>
+    ().ID("LRPVendorVoucherAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+       @* groupItems.AddSimpleFor(m => m.Name);
+        groupItems.AddEmpty();*@
+
+        groupItems.AddSimpleFor(m => m.LrpvendorId).Label(l => l.Text("Vendor"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpdocumentType")
+        .DataSource(d => d.Mvc().Controller("LRPVendor").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+        groupItems.AddSimpleFor(m => m.Pono);
+
+        groupItems.AddSimpleFor(m => m.VoucherNo);
+
+        groupItems.AddSimpleFor(m => m.Company);
+
+        groupItems.AddSimpleFor(m => m.LrpdocumentTypeId).Label(l => l.Text("Document Type"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpdocumentType")
+        .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+        groupItems.AddSimpleFor(m => m.DocumentNo);
+        groupItems.AddSimpleFor(m => m.DocumentAmount);
+        groupItems.AddSimpleFor(m => m.CurrentBalanceAmount).Label(l => l.Text("Postal Code"));
+        groupItems.AddSimpleFor(m => m.Voided);
+        groupItems.AddSimpleFor(m => m.Hold);
+        groupItems.AddSimpleFor(m => m.TrxDescription);
+        groupItems.AddSimpleFor(m => m.Ten99amnt).Label(l => l.Text("1099 Amount"));
+        groupItems.AddSimpleFor(m => m.InvoiceDate);
+        groupItems.AddSimpleFor(m => m.Pstgdate);
+
+        groupItems.AddSimpleFor(m => m.Lrpten99TaxTypeId).Label(l => l.Text("1099 Tax Type"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpten99Taxtype")
+        .DataSource(d => d.Mvc().Controller("LRPTen99TaxType").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+        groupItems.AddSimpleFor(m => m.Lrpten99BoxNoId).Label(l => l.Text("1099 Box No"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpten99BoxNo")
+        .DataSource(d => d.Mvc().Controller("LRPTen99BoxNo").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+        groupItems.AddSimpleFor(m => m.CssLink);
+        groupItems.AddSimpleFor(m => m.CssLinkLines);
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpVendorVoucherAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

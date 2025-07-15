@@ -1,0 +1,7 @@
+﻿@{
+    ViewData["Title"] = "BDG Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/BudgetReport/_List.cshtml"); }
+<script src="~/scripts/budgetReport.js" asp-append-version="true"></script>

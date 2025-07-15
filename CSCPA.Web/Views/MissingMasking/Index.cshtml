@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Missing Masking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/MissingMasking/_List.cshtml"); }
+
+<script src="~/scripts/missingMasking.js" asp-append-version="true"></script>

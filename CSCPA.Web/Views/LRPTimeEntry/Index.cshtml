@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "LRP Time Entry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/LRPTimeEntry/_List.cshtml"); }
+
+<script src="~/scripts/lrpTimeEntry.js" asp-append-version="true"></script>

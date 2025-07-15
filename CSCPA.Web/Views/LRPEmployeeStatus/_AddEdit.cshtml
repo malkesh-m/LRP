@@ -1,0 +1,21 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPEmployeeStatusAddEditModel>
+    ().ID("LRPEmployeeStatusAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpEmployeeStatusAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

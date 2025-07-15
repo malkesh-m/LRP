@@ -1,0 +1,20 @@
+﻿<div id="form-container">
+    <div id="form"></div>
+</div>
+<div>
+    <div id="success-contained"></div>
+</div>
+<script>
+    $(function () {
+        reportAddEdit.parameter();
+        $("#success-contained").dxButton({
+            stylingMode: "contained",
+            text: "Save",
+            type: "success",
+            width: 120,
+            onClick: function () {
+                reportAddEdit.showReport();
+            }
+        });
+    })
+</script>

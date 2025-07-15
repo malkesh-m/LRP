@@ -1,0 +1,56 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPTimeEntryAddEditModel>
+    ().ID("LRPTimeEntryAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUid).Visible(false);
+
+
+        groupItems.AddSimpleFor(m => m.LrpemployeeId).Label(l => l.Text("Employee Code"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("Employee")
+        .DataSource(d => d.Mvc().Controller("LRPEmployee").LoadAction("LookUp").Key("ObjectUid"))
+        .Placeholder("Please Select")
+        .DisplayExpr("EmployeeNo")
+        .ValueExpr("ObjectUid")
+        ).IsRequired(true);
+
+        groupItems.AddSimpleFor(m => m.LrpcodeId).Label(l => l.Text("LM2 Code"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("LM2Code")
+        .DataSource(d => d.Mvc().Controller("LRPCode").LoadAction("LookUp").Key("ObjectUid"))
+        .Placeholder("Please Select")
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        ).IsRequired(true);
+
+        groupItems.AddSimpleFor(m => m.LrpDateStart)
+        .Label(l => l.Text("Start Date"));
+
+        groupItems.AddSimpleFor(m => m.LrpDateEnd)
+        .Label(l => l.Text("End Date"));
+        
+        groupItems.AddSimpleFor(m => m.Percentage);
+        groupItems.AddEmpty();
+
+        groupItems.AddSimpleFor(m => m.Description).Label(l => l.Text("Notes"))
+        .Editor(e => e
+        .TextArea()
+        .Height(100))
+        .ColSpan(2);
+
+        groupItems.AddButton()
+        .HorizontalAlignment(HorizontalAlignment.Left)
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpTimeEntryAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

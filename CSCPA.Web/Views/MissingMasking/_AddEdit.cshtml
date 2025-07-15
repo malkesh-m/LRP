@@ -1,0 +1,38 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<MissingMaskingAddEditModel>
+    ().ID("MissingMaskingAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+        groupItems.AddSimpleFor(m => m.AccountNo).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.SumAmount).Label(x=> x.Text("Total Amount"));
+
+        groupItems.AddSimpleFor(m => m.BdgreportGroupId).Label(l => l.Text("Report Group"))
+.Editor(e => e
+.SelectBox()
+.ID("BdgreportGroup")
+.DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookupReportGroup").Key("Value"))
+.DisplayExpr("Text")
+.ValueExpr("Value")
+); 
+        groupItems.AddEmpty();
+        groupItems.AddSimpleFor(m => m.Description)
+      .ColSpan(2)
+      .Editor(e => e
+      .TextArea()
+      .Height(140)
+      );
+
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("missingMaskingAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

@@ -1,0 +1,35 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<ReportModel>
+    ().ID("ReportDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.Parameter1).Label(l => l.Text("Document Type"))
+       .Editor(e => e
+       .SelectBox()
+       .ID("lrpDocumentType")
+       .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("Lookup").Key("ObjectUid"))
+       .DisplayExpr("Name")
+       .ValueExpr("ObjectUid")
+       );
+
+        groupItems.AddSimpleFor(m => m.Parameter2).Label(l => l.Text("Vendor Voucher"))
+       .Editor(e => e
+       .SelectBox()
+       .ID("lrpVendorVoucher")
+       .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("Lookup").Key("ObjectUid"))
+       .DisplayExpr("Name")
+       .ValueExpr("ObjectUid")
+       );
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Submit")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpVendorVoucherApplicabilityAddEdit.reprotParameter")
+        );
+    })
+    .FormData(Model)
+    )

@@ -1,0 +1,56 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPVendorVoucherApplicabilityAddEditModel>
+    ().ID("LRPVendorVoucherApplicabilityAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.VoucherNo).IsRequired(true);
+
+
+       groupItems.AddSimpleFor(m => m.LrpdocumentTypeId).Label(l => l.Text("Document Type"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpdocumentType")
+        .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+               groupItems.AddSimpleFor(m => m.LrpvendorVoucherId).Label(l => l.Text("Lrp Vendor Voucher"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpdocumentType")
+        .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+        groupItems.AddSimpleFor(m => m.AppliedToDocumentNo);
+
+        groupItems.AddSimpleFor(m => m.AppliedAmount);
+
+        groupItems.AddSimpleFor(m => m.CssLink);
+        groupItems.AddSimpleFor(m => m.DocumentDate);
+                groupItems.AddSimpleFor(m => m.Description)
+        .ColSpan(2)
+        .Editor(e => e
+        .TextArea()
+        .Height(140)
+        );
+
+
+
+        groupItems.AddButton()
+        .HorizontalAlignment(HorizontalAlignment.Left)
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpVendorVoucherApplicabilityAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

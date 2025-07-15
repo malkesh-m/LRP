@@ -1,0 +1,213 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP GL Transaction</h3>
+                </div>
+                    <div class="row">
+                        <div class="headerRightSideDiv">
+                            <div style="float:left">
+                               
+                                @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','GLTransactionList','glTransactionList') }")
+                                )
+                                @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','glTransactionList') }")
+                                )
+                            </div>
+                            <div class="templateDorpdownDiv">
+                                @(
+                                Html.DevExtreme()
+                                    .SelectBox()
+                                    .ID("Layouts")
+                                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'glTransactionList']" }).Key("Value"))
+                                    .DisplayExpr("Layoutname")
+                                    .ValueExpr("Id")
+                                    .OnValueChanged("function(e) { common.loadTemplate(e,'GLTransactionList') }")
+                                        )
+                            </div>
+                            <div style="float:left">
+                                @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','GLTransactionList','glTransactionList') }")
+                            )
+                            </div>
+                        </div>
+                        <div class="mr-0 text-right">
+                            @(Html.DevExtreme().Button()
+                            .ID("MassUpdate")
+                            .Icon("save")
+                            .Disabled(true).Hint("Mass Update")
+                            .OnClick("lrpGLTransactionList.onmassUpdateBtnClick")
+                            )
+                            @(Html.DevExtreme().Button()
+                                .ID("ClearUpdate")
+                                .Icon("clear").Hint("Clear")
+                                .OnClick("lrpGLTransactionList.onClearBtnClick")
+                                )
+                            @*  @(Html.DevExtreme().Button()
+        .ID("printExcel")
+        .Icon("print")
+        .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPGLTransaction") +"'}"))*@
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        Code @(Html.DevExtreme().TextBox().ID("txtCode"))
+                    </div>
+                    <div class="col-md-3">
+                        Employee @(Html.DevExtreme().TextBox().ID("txtEmployee"))
+                    </div>
+                    <div class="col-md-3">
+                        FinalID @(Html.DevExtreme().TextBox().ID("txtFinalId"))
+                    </div>
+                    <div class="col-md-3">
+                        Description  @(Html.DevExtreme().TextBox().ID("txtDescription"))
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-3">
+                        Check No  @(Html.DevExtreme().TextBox().ID("txtCheckNo"))
+                    </div>
+                    <div class="col-md-3">
+                        Sales Tax Amount  @(Html.DevExtreme().TextBox().ID("txtSalesTaxAmount"))
+                    </div>
+                    <div class="col-md-3">
+                        Sales Tax Rate  @(Html.DevExtreme().TextBox().ID("txtSalesTaxRate"))
+                    </div>
+                    <div class="col-md-3">
+                        Tax  @(Html.DevExtreme().SelectBox().ID("txtSalesTaxYesNo").DataSource(d => d.Mvc().Controller("LRPGLTransaction").LoadAction("LookupSalesTax").Key("Value"))
+                       .DisplayExpr("Text")
+                        .ValueExpr("Value")
+                        )
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPGLTransactionListModel>()
+                        .ID("GLTransactionList")
+                        .ShowBorders(true)
+                        .ColumnAutoWidth(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpGLTransactionList.onSectionChnage")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpGLTransactionList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPGLTransaction")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUid")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpGLTransactionList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Name).AllowEditing(false);
+                        columns.AddFor(m => m.LrpcompanyId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("LRPCompany").LoadAction("LookUp").Key("Value"))
+                         .DisplayExpr("Name")
+                          .ValueExpr("ObjectUid")
+                          ).AllowEditing(false);
+
+                        columns.AddFor(m => m.IdField).AllowEditing(false);
+                        columns.AddFor(m => m.Classid).AllowEditing(false);
+                        columns.AddFor(m => m.Acct).AllowEditing(false);
+                        columns.AddFor(m => m.Descr).AllowEditing(false);
+                        columns.AddFor(m => m.Batnbr).AllowEditing(false);
+                        columns.AddFor(m => m.Cpnyid).AllowEditing(false);
+                        columns.AddFor(m => m.Fiscyr).AllowEditing(false);
+                        columns.AddFor(m => m.Id).AllowEditing(false);
+                        columns.AddFor(m => m.Jrnltype).AllowEditing(false);
+                        columns.AddFor(m => m.Ledgerid).AllowEditing(false);
+                        columns.AddFor(m => m.Linenbr).AllowEditing(false);
+                        columns.AddFor(m => m.Lineref).AllowEditing(false);
+                        columns.AddFor(m => m.Module).AllowEditing(false);
+                        columns.AddFor(m => m.Refnbr).AllowEditing(false);
+                        columns.AddFor(m => m.Docnbr).AllowEditing(false);
+                        columns.AddFor(m => m.Auditnbr).AllowEditing(false);
+                        columns.AddFor(m => m.Seg1).AllowEditing(false);
+                        columns.AddFor(m => m.Seg2).AllowEditing(false);
+                        columns.AddFor(m => m.Seg3).AllowEditing(false);
+                        columns.AddFor(m => m.Seg4).AllowEditing(false);
+                        columns.AddFor(m => m.Seg5).AllowEditing(false);
+                        columns.AddFor(m => m.Seg6).AllowEditing(false);
+                        columns.AddFor(m => m.Seg7).AllowEditing(false);
+                        columns.AddFor(m => m.Seg8).AllowEditing(false);
+                        columns.AddFor(m => m.Seg9).AllowEditing(false);
+                        columns.AddFor(m => m.Seg10).AllowEditing(false);
+                        columns.AddFor(m => m.Sub).AllowEditing(false);
+                        columns.AddFor(m => m.Trandate).AllowEditing(false);
+                        columns.AddFor(m => m.Trandesc).AllowEditing(false);
+                        columns.AddFor(m => m.Trantype).AllowEditing(false);
+                        columns.AddFor(m => m.Lm2Description).AllowEditing(false);
+                        columns.AddFor(m => m.FinalId);
+                        columns.AddFor(m => m.Lm2Code);
+                        columns.AddFor(m => m.EmployeeCode);
+                        columns.AddFor(m => m.Amount).AllowEditing(false).Format("$ #,##0.##");
+                        columns.AddFor(m => m.Vclassid).AllowEditing(false);
+                        columns.AddFor(m => m.Masterid).AllowEditing(false);
+                        columns.AddFor(m => m.Checkdate).AllowEditing(false);
+                        columns.AddFor(m => m.Checkno);
+                        columns.AddFor(m => m.Checkdate2).AllowEditing(false);
+                        columns.AddFor(m => m.Checkno2).AllowEditing(false);
+                        columns.AddFor(m => m.Lm2Fiscyr).AllowEditing(false);
+                        columns.AddFor(m => m.Description);
+                        columns.AddFor(m => m.SalesTaxAmount);
+                        columns.AddFor(m => m.SalesTaxRate);
+                        columns.AddFor(m => m.SalesTaxYesNoId).Lookup(lookup => lookup
+                     .DataSource(d => d.Mvc().Controller("LRPGLTransaction").LoadAction("LookupSalesTax").Key("Value"))
+                       .DisplayExpr("Text")
+                        .ValueExpr("Value")
+                        );
+                        columns.AddFor(m => m.CalculatedAmount).AllowEditing(false);
+                        columns.AddFor(m => m.BdgaccountGroup).AllowEditing(false);
+                        columns.AddFor(m => m.Bdgdepartment).AllowEditing(false);
+                        columns.AddFor(m => m.BdgaccountGroupSubGroup).AllowEditing(false);
+                        columns.AddFor(m => m.BdgaccountGroupSubGroupSubGroup).AllowEditing(false);
+                        columns.AddFor(m => m.BdgaccountGroupSubGroupSubGroupSubGroup).AllowEditing(false);
+                        columns.AddFor(m => m.GrantNo).AllowEditing(false);
+
+                       
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+                    .Paging(paging => paging.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpGLTransactionList.toolbar_preparing")
+                    .OnRowUpdated("function(e) { lrpGLTransactionList.refreshList(); }").Summary(x => x.TotalItems(items =>
+                    {
+                        items.AddFor(m => m.Amount)
+                        .SummaryType(SummaryType.Sum).ValueFormat("$ #,##0.##");
+                    }))
+                    )
+            </div>
+        </div>
+    </div>
+</div>

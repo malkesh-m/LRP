@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Module";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/Module/_List.cshtml"); }
+
+<script src="~/scripts/module.js" asp-append-version="true"></script>

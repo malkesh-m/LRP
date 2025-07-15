@@ -1,0 +1,138 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">BDG Report</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','BdgreportList','BDGReportList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','BDGReportList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'BDGReportList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'BdgreportList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','BdgreportList','BDGReportList') }")
+                            )
+                            @*   @(Html.DevExtreme().Button()
+                                .ID("printExcel")
+                                .Icon("print")
+                                .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "Bdgreport") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<BdgreportListModel>()
+                        .ID("BdgreportList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("bdgreportList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("bdgreportList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("Bdgreport")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("bdgreportList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Name);
+                        columns.AddFor(m => m.ReportFile);
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { bdgreportAddEdit.showModel(e, bdgreportList.refreshList); }");
+                            b.Add().Icon("file").OnClick("function(e) { reportAddEdit.showModel(e, bdgreportList.refreshList); }");
+                            b.Add().Icon("add").OnClick("function(e) { bdgreportAddEdit.showParameterModel(e,state='add', bdgreportList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { bdgreportList.onRowRemoving(e); }");
+
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("bdgreportList.toolbar_preparing")
+                    .MasterDetail(md=>
+                    {
+                        md.Enabled(true);
+                        md.Template(@<text>
+                 @(Html.DevExtreme().DataGrid<BdgreportParameterListModel>()
+                               .ColumnAutoWidth(true)
+                               .ShowBorders(true)
+                               .Columns(columns =>
+                               {
+                                   columns.AddFor(m => m.ParameterDisplayName);
+
+                                   columns.AddFor(m => m.BdgreportParameterTypeId)
+                                        .Lookup(lookup => lookup
+                                        .DataSource(d => d.Mvc().Controller("BdgreportParameterType").LoadAction("LookUp").Key("ObjectUid"))
+                                        .DisplayExpr("Name")
+                                        .ValueExpr("ObjectUid")
+                                        );
+
+                                   columns.Add().Type(GridCommandColumnType.Buttons)
+                                       .Buttons(b =>
+                                       {
+                                           b.Add().Icon("edit").OnClick("function(e) { bdgreportAddEdit.showParameterModel(e,'edit', bdgreportList.refreshList); }");
+                                           b.Add().Icon("trash").OnClick("function(e) { bdgreportAddEdit.RemoveParameter(e); }");
+
+                                       }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                               })
+                               .DataSource(d => d.Mvc()
+                                   .Controller("BdgreportParameter")
+                                   .LoadAction("ListView")
+                                   .LoadParams(new { id = new JS("data.ObjectUID") })
+                               ))
+                </text>);
+                    })
+                    )
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

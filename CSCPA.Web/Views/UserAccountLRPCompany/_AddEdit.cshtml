@@ -1,0 +1,34 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<UserAccountLRPCompanyAddEditModel>
+    ().ID("UserAccountLRPCompanyAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+       // groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.LrpcompanyId).Label(l => l.Text("Company"))
+      .Editor(e => e
+      .SelectBox()
+      .DataSource(d => d.Mvc().Controller("LRPCompany").LoadAction("Lookup").Key("ObjectUid"))
+      .DisplayExpr("Name")
+      .ValueExpr("ObjectUid").SearchEnabled(true)
+      );
+        groupItems.AddSimpleFor(m => m.UserAccountId).Label(l => l.Text("User Account"))
+       .Editor(e => e
+       .SelectBox()
+       .DataSource(d => d.Mvc().Controller("UserAccount").LoadAction("Lookup").Key("ObjectUid"))
+       .DisplayExpr("Name")
+       .ValueExpr("ObjectUid").SearchEnabled(true)
+       );
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("userAccountLRPCompanyAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

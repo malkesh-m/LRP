@@ -1,0 +1,41 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<RoleModuleAddEditModel>
+    ().ID("LRPRoleModuleAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        // groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.RoleId).Label(l => l.Text("Role"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("Role").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.ModuleId).Label(l => l.Text("Module"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("Module").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddGroup().Caption("Permissions").ColCount(2).Items(i =>
+        {
+            i.AddSimpleFor(m => m.CustomA).Label(l => l.Text("View"));
+            i.AddSimpleFor(m => m.CustomB).Label(l => l.Text("Create"));
+            i.AddSimpleFor(m => m.CustomC).Label(l => l.Text("Edit"));
+            i.AddSimpleFor(m => m.CustomD).Label(l => l.Text("Delete"));
+        });
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpRoleModuleAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

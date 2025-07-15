@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "LRP Cost Center";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/LRPCostCenter/_List.cshtml"); }
+
+<script src="~/scripts/lrpCostCenter.js" asp-append-version="true"></script>

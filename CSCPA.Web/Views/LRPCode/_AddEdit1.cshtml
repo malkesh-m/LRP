@@ -1,0 +1,69 @@
+﻿@model CSCPA.Model.BdgreportAddEditModel
+@Html.AntiForgeryToken()
+<form id="form" action="Add" method="post" enctype="multipart/form-data">
+    <h3>Profile Settings</h3>
+    <div class="dx-fieldset">
+        <div class="dx-field">
+            <div class="dx-field-label">First Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBoxFor(x=> x.Name)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Last Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBoxFor(x=> x.SortOrder)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Last Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBoxFor(x=> x.ReportFile)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Last Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().CheckBoxFor(x=> x.ShowInCrystalViewer)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Last Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBoxFor(x=> x.PortalId)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Last Name:</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBoxFor(x=> x.Description)
+                    .Name("Name")
+                )
+            </div>
+        </div>
+    </div>
+    <div id="fileuploader-container">
+        @(Html.DevExtreme().FileUploader()
+            .Name("Source")
+            .LabelText("")
+            .Accept("*")
+            .UploadMode(FileUploadMode.UseForm)
+        )
+    </div>
+    @(Html.DevExtreme().Button()
+        .ID("button")
+        .Text("Update profile")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(true)
+    )
+</form>

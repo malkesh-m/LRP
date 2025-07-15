@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "LRP Vendor Master";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/LRPVendorMaster/_List.cshtml"); }
+
+<script src="~/scripts/lrpVendorMaster.js" asp-append-version="true"></script>

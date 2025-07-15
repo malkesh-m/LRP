@@ -1,0 +1,98 @@
+.box-header .col-md-6 {
+    padding: 10px;
+}
+.templateDorpdownDiv {
+    float: left;
+    margin-right: 5px;
+}
+.headerRightSideDiv {
+    float: right;
+    margin-left: 5px;
+    margin-right: 16px;
+}
+
+.nav-item > .nav-link.active {
+    background-color: #396f8b;
+    color: #ffffff;
+}
+
+.sidebar-scrollable {
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+}
+
+ul::-webkit-scrollbar {
+    width: 1em;
+}
+
+ul::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+ul::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+
+.main-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 50px;
+    min-height: 100%;
+    width: 260px;
+    z-index: 810;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.main-header .navbar {
+    -webkit-transition: margin-left 0.3s ease-in-out;
+    -o-transition: margin-left 0.3s ease-in-out;
+    transition: margin-left 0.3s ease-in-out;
+    margin-bottom: 0;
+    margin-left: 260px;
+    border: none;
+    min-height: 50px;
+    border-radius: 0;
+}
+
+.main-header .logo {
+    -webkit-transition: width 0.3s ease-in-out;
+    -o-transition: width 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out;
+    display: block;
+    float: left;
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    width: 260px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 0 15px;
+    font-weight: 300;
+    overflow: hidden;
+}
+
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 45px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.content {
+    min-height: 250px;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 45px;
+    padding-right: 15px;
+}
+
+.model-report{
+    width:60%;
+    height:auto;
+}

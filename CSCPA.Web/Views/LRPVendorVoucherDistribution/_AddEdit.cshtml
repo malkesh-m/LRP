@@ -1,0 +1,39 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPVendorVoucherDistributionAddEditModel>
+    ().ID("LRPVendorVoucherDistributionAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+
+        groupItems.AddSimpleFor(m => m.AccountNo).IsRequired(true);
+
+
+
+        groupItems.AddSimpleFor(m => m.AccountDescription);
+        groupItems.AddSimpleFor(m => m.LrpvendorVoucherId).Label(l => l.Text("Vendor Vouncher"))
+       .Editor(e => e
+       .SelectBox()
+       .ID("lrpVendorVoucherDistributionClass")
+       .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("Lookup").Key("ObjectUid"))
+       .DisplayExpr("Name")
+       .ValueExpr("ObjectUid")
+       );
+        groupItems.AddSimpleFor(m => m.DebitAmount);
+
+        groupItems.AddSimpleFor(m => m.CreditAmount);
+
+
+        groupItems.AddButton()
+        .HorizontalAlignment(HorizontalAlignment.Left)
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpVendorVoucherDistributionAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

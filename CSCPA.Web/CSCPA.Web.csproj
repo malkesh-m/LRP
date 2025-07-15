@@ -1,0 +1,105 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>17530619-10ab-497b-b2e0-564731cc13a5</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="wwwroot\bower_components\**" />
+    <Content Remove="wwwroot\bower_components\**" />
+    <EmbeddedResource Remove="wwwroot\bower_components\**" />
+    <None Remove="wwwroot\bower_components\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Reports\Applicability.repx" />
+    <None Remove="Reports\LrpVendorApplicabilityReport.repx" />
+    <None Remove="Reports\SampleCountry.repx" />
+    <None Remove="Reports\TestReport.repx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\Applicability.cs">
+      <DependentUpon>Applicability.repx</DependentUpon>
+    </Content>
+    <Content Include="Reports\Applicability.Designer.cs">
+      <DependentUpon>Applicability.repx</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\Applicability.repx" />
+    <EmbeddedResource Include="Reports\LrpVendorApplicabilityReport.repx" />
+    <EmbeddedResource Include="Reports\SampleCountry.repx" />
+    <EmbeddedResource Include="Reports\TestReport.repx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\css\icons\fontawesome\.DS_Store" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-brands-400.svg" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-regular-400.svg" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-solid-900.svg" />
+    <None Include="wwwroot\css\icons\fontawesome\fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\css\icons\icomoon\fonts\icomoon.svg" />
+    <None Include="wwwroot\css\icons\material\fonts\material-icons.svg" />
+    <None Include="wwwroot\css\icons\summernote\.DS_Store" />
+    <None Include="wwwroot\plugin\overlayScrollbars\js\jquery.overlayScrollbars.js" />
+    <None Include="wwwroot\plugin\overlayScrollbars\js\jquery.overlayScrollbars.min.js" />
+    <None Include="wwwroot\plugin\overlayScrollbars\js\OverlayScrollbars.js" />
+    <None Include="wwwroot\plugin\overlayScrollbars\js\OverlayScrollbars.min.js" />
+    <None Include="wwwroot\scripts\common.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.1.12" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="20.1.12" />
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="20.1.12" />
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.2" />
+    <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSCPA.Ioc\CSCPA.Ioc.csproj" />
+    <ProjectReference Include="..\CSCPA.Model\CSCPA.Model.csproj" />
+    <ProjectReference Include="..\CSCPA.Service\CSCPA.Service.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\css\icons\glyphicons\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Reports\Applicability.cs">
+      <DependentUpon>Applicability.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\Applicability.Designer.cs">
+      <DependentUpon>Applicability.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\LrpVendorApplicabilityReport.cs">
+      <DependentUpon>LrpVendorApplicabilityReport.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\LrpVendorApplicabilityReport.Designer.cs">
+      <DependentUpon>LrpVendorApplicabilityReport.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SampleCountry.cs">
+      <DependentUpon>SampleCountry.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\SampleCountry.Designer.cs">
+      <DependentUpon>SampleCountry.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TestReport.cs">
+      <DependentUpon>TestReport.repx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\TestReport.Designer.cs">
+      <DependentUpon>TestReport.repx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties TemplateFeatures="NETCORE" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

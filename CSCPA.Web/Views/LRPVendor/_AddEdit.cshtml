@@ -1,0 +1,71 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPVendorAddEditModel>
+    ().ID("LRPVendorAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddEmpty();
+
+        groupItems.AddSimpleFor(m => m.VendorNo).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.LrpvendorClassId).Label(l => l.Text("Vendor class"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("lrpVendorClass")
+        .DataSource(d => d.Mvc().Controller("LRPVendorClass").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+
+
+        groupItems.AddSimpleFor(m => m.AddressI);
+
+        groupItems.AddSimpleFor(m => m.AddressIi);
+
+        groupItems.AddSimpleFor(m => m.AddressIii);
+        groupItems.AddSimpleFor(m => m.ContactName);
+        groupItems.AddSimpleFor(m => m.City);
+        groupItems.AddSimpleFor(m => m.PostalCode).Label(l => l.Text("Postal Code"));
+
+
+        groupItems.AddSimpleFor(m => m.CountryId).Label(l => l.Text("Country"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("Country")
+        .DataSource(d => d.Mvc().Controller("Country").LoadAction("LookUp").Key("Value"))
+        .DisplayExpr("Text")
+        .ValueExpr("Value")
+        .OnValueChanged("lrpVendorAddEdit.onchangeCountry")
+        );
+
+        groupItems.AddSimpleFor(m => m.CountryStateId).Label(l => l.Text("Country State"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("State")
+        .DataSource(d => d.Mvc().Controller("CountryState").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+                groupItems.AddSimpleFor(m => m.LrpdepartmentId).Label(l => l.Text("Department"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("LRPDepartment").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.Userdef1).Label(l=> l.Text("Employee No"));
+        groupItems.AddEmpty();
+        groupItems.AddButton()
+        .HorizontalAlignment(HorizontalAlignment.Left)
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpVendorAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

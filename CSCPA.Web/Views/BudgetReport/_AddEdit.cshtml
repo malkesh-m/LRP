@@ -1,0 +1,42 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<BudgetReportAddEditModel>
+    ().ID("BudgetReportAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.BdgreportGroupId).Label(l => l.Text("Report Group"))
+.Editor(e => e
+.SelectBox()
+.ID("BdgreportGroup")
+.DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookupReportGroup").Key("Value"))
+.DisplayExpr("Text")
+.ValueExpr("Value")
+);
+        groupItems.AddSimpleFor(m => m.BdgreportId).Label(l => l.Text("Report"))
+.Editor(e => e
+.SelectBox()
+.ID("Bdgreport")
+.DataSource(d => d.Mvc().Controller("BdgReport").LoadAction("Lookup").Key("ObjectUid"))
+.DisplayExpr("Name")
+.ValueExpr("ObjectUid")
+);
+        groupItems.AddSimpleFor(m => m.Description)
+         .ColSpan(2)
+         .Editor(e => e
+         .TextArea()
+         .Height(140)
+         );
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("budgetReportAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

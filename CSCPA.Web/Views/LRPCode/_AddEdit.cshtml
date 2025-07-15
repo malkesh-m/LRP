@@ -1,0 +1,26 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPCodeAddEditModel>
+    ().ID("LRPCodeAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.Description)
+      .ColSpan(2)
+      .Editor(e => e
+      .TextArea()
+      .Height(140)
+      );
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpCodeAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

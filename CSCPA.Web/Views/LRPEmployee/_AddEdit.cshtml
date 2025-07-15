@@ -1,0 +1,64 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<LRPEmployeeAddEditModel>
+    ().ID("LRPEmployeeAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.EmployeeNo).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.Name);
+
+        groupItems.AddSimpleFor(m => m.FirstName).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.MiddleName);
+        groupItems.AddSimpleFor(m => m.LastName).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.JobTitle).IsRequired(true);
+                groupItems.AddSimpleFor(m => m.LrpdepartmentId).Label(l => l.Text("Department"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("LRPDepartment").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+                groupItems.AddSimpleFor(m => m.LrpcostCenterId).Label(l => l.Text("Cost Center"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("LRPCostCenter").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.TermDate);
+        groupItems.AddSimpleFor(m => m.HireDate);
+             groupItems.AddSimpleFor(m => m.LrpemployeeStatusId).Label(l => l.Text("Employee Status"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("LRPEmployeeStatus").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+             groupItems.AddSimpleFor(m => m.LrpemployeeTypeId).Label(l => l.Text("Employee Type"))
+        .Editor(e => e
+        .SelectBox()
+        .DataSource(d => d.Mvc().Controller("LRPEmployeeType").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.IsInactive);
+        groupItems.AddSimpleFor(m => m.GrantWorker);
+        groupItems.AddSimpleFor(m => m.Description)
+      .ColSpan(2)
+      .Editor(e => e
+      .TextArea()
+      .Height(140)
+      );
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("lrpEmployeeAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )

@@ -1,0 +1,7 @@
+﻿@{
+    ViewData["Title"] = "GL Account Mapping";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/GLAccountMapping/_List.cshtml"); }
+<script src="~/scripts/glAccountMapping.js" asp-append-version="true"></script>

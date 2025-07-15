@@ -1,0 +1,128 @@
+﻿@model CSCPA.Model.LRPCompanyAddEditModel
+<div class="col-md-12">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Company Add/Edit</h3>
+        </div>
+        @using (Html.BeginForm("AddEdit","LRPCompany", FormMethod.Post, new { id= "LRPCompanyAddEditDevForm" }))
+        {
+                   
+            using (Html.DevExtreme().ValidationGroup())
+            {
+                using (Html.DevExtreme().ValidationGroup())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ObjectUID)
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Name">Name</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.Name)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Code">Code</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.Code)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Phone">Phone</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.Phone)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="AddressLineI">Address Line I</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.AddressLineI)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="AddressLineII">Address Line II</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.AddressLineII)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Address Line III</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.AddressLineIII)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">City</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.City)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="PostalCode">Postal Code</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.PostalCode)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="CountryId">Country</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.CountryId)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="CountryStateId">State</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.CountryStateId)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="ParentLrpcompanyId">Parent LRPCompany</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.ParentLrpcompanyId)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Description">Description</label>
+                                    @Html.DevExtreme().TextBoxFor(m => m.Description)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="box-footer">
+                        @(Html.DevExtreme().ValidationSummary()
+                .ID("Summary")
+            )
+                        @(Html.DevExtreme().Button()
+                .ID("SaveButton")
+                .Text("Save")
+                .Type(ButtonType.Success)
+                .UseSubmitBehavior(true)
+                .OnClick("lrpCompanyAddEdit.save")
+            )
+
+                    </div>
+                }
+            }
+        }
+        </div>
+    </div>

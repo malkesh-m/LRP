@@ -1,0 +1,254 @@
+﻿@{
+    bool _country = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.Country.View").Any();
+    bool _state = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.Country_State.View").Any();
+    bool _lrpCompany = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPCompany.View").Any();
+    bool _lrpEmployee = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPEmployee.View").Any();
+    bool _lrpEmployeeStatus = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPEmployeeStatus.View").Any();
+    bool _lrpEmployeeType = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPEmployeeType.View").Any();
+    bool _lrpReport = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPReport.View").Any();
+    bool _lrpTimeEntry = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPTimeEntry.View").Any();
+    bool _bdgReport = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDGReport.View").Any();
+    bool _lrpCode = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPCode.View").Any();
+    bool _lrpCostCenter = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPCostCenter.View").Any();
+    bool _lrpDepartment = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPDepartment.View").Any();
+    bool _lrpDocumentType = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPDocumentType.View").Any();
+    bool _lrpglTransaction = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPGLTransaction.View").Any();
+    bool _lrpVendor = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVendor.View").Any();
+    bool _lrpVendorMaster = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVendorMaster.View").Any();
+    bool _lrpVendorVoucher = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVendor_Voucher.View").Any();
+    bool _lrpVoucherStatus = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVoucherStatus.View").Any();
+    bool _lrpVendorClass = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVendorClass.View").Any();
+    bool _lrpVendorvoucherApplicability = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPVendor_Voucher_Applicability.View").Any();
+    bool _lrpTen99BoxNo = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPTen99BoxNo.View").Any();
+    bool _lrpTen99TaxType = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.LRPTen99TaxType.View").Any();
+    bool _budget = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDGBudgetInfo.View").Any();
+    bool _glInquiry = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDG_LRPGLTransaction.View").Any();
+    bool _glAccountMapping = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDGReportGroup_BDGGLAccountMapping.View").Any();
+    bool _missingMasking = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDGReportGroup_MissingMasking.View").Any();
+    bool _duplicateMasking = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.BDGReportGroup_DuplicateMasking.View").Any();
+    bool _role = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.Role.View").Any();
+    bool _module = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.Module.View").Any();
+    bool _roleModule = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.Role_Module.View").Any();
+    bool _userAccount = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.UserAccount.View").Any();
+    bool _userAccountRole = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.UserAccount_Role.View").Any();
+    bool _userAccountLRPCompany = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.UserAccount_LRPCompany.View").Any();
+    bool _userAccountBdgDepartment = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.UserAccount_BDGDepartment.View").Any();
+    bool _lrpVendorVoucherDistribution = User.Claims.Where(x => x.Type == "Permission" & x.Value == "Permissions.UserAccount_BDGDepartment.View").Any();
+}
+<ul class="sidebar-menu tree" data-widget="tree">
+    <li class="header">HEADER</li>
+    <li class="nav-item"><a class="nav-link" href="/"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+    <li class="treeview" style="height: auto;">
+        <a href="#">
+            <i class="fa fa-location-arrow"></i> <span>Location</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu" style="display: none;">
+            @if (_country || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/Country"><i class="fa fa-link"></i> <span>Country</span></a></li>
+            }
+            @if (_state || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/CountryState"><i class="fa fa-link"></i> <span>State</span></a></li>
+
+            }
+        </ul>
+    </li>
+    <li class="treeview" style="height: auto;">
+        <a href="#">
+            <i class="fa fa-book"></i> <span>LRP</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu" style="display: none;">
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-book"></i> <span>LRP Setup</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+
+                    @if (_lrpCode || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPCode"><i class="fa fa-link"></i> <span>LRP Code</span></a></li>
+                    }
+                    @if (_lrpCompany || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPCompany"><i class="fa fa-link"></i> <span>LRP Company</span></a></li>
+                    }
+                    @if (_lrpCostCenter || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPCostCenter"><i class="fa fa-link"></i> <span>LRP Cost Center</span></a></li>
+                    }
+                    @if (_lrpDepartment || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPDepartment"><i class="fa fa-link"></i> <span>LRP Department</span></a></li>
+                    }
+                    @if (_lrpDocumentType || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPDocumentType"><i class="fa fa-link"></i> <span>LRP Document Type</span></a></li>
+                    }
+                    @if (_lrpEmployee || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPEmployee"><i class="fa fa-link"></i> <span>LRP Employee</span></a></li>
+                    }
+                    @if (_lrpEmployeeStatus || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPEmployeeStatus"><i class="fa fa-link"></i> <span>LRP Employee Status</span></a></li>
+                    }
+                    @if (_lrpEmployeeType || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPEmployeeType"><i class="fa fa-link"></i> <span>LRP Employee Type</span></a></li>
+                    }
+                    @if (_lrpTimeEntry || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPTimeEntry"><i class="fa fa-link"></i> <span>LRP Time Entry</span></a></li>
+                    }
+                </ul>
+            </li>
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-book"></i> <span>LRP Application</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    @if (_lrpglTransaction || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPGLTransaction"><i class="fa fa-link"></i> <span>LRP GL Transaction</span></a></li>
+                    }
+                    @if (_lrpTen99BoxNo || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPTen99BoxNo"><i class="fa fa-link"></i> <span>LRP Ten99 Box No</span></a></li>
+                    }
+                    @if (_lrpTen99TaxType || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPTen99TaxType"><i class="fa fa-link"></i> <span>LRP Ten99 Tax Type</span></a></li>
+                    }
+                    @if (_lrpVendor || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendor"><i class="fa fa-link"></i> <span>LRP Vendor</span></a></li>
+                    }
+                    @if (_lrpVendorMaster || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorMaster"><i class="fa fa-link"></i> <span>LRP Vendor Master</span></a></li>
+                    }
+                    @if (_lrpVoucherStatus || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVoucherStatus"><i class="fa fa-link"></i> <span>LRP Voucher Status</span></a></li>
+                    }
+                    @if (_lrpVendorVoucher || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorVoucher"><i class="fa fa-link"></i> <span>LRP Vendor Voucher</span></a></li>
+                    }
+                    @if (_lrpVendorClass || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorClass"><i class="fa fa-link"></i> <span>LRP Vendor Class</span></a></li>
+                    }
+                    @if (_lrpVendorvoucherApplicability || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorVoucherApplicability"><i class="fa fa-link"></i> <span>LRP Vendor Voucher Applicability</span></a></li>
+                    }
+                    @if (_lrpVendorVoucherDistribution || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorVoucherDistribution"><i class="fa fa-link"></i> <span>LRP Vendor Voucher Distribution</span></a></li>
+                    }
+
+                </ul>
+            </li>
+            @if (_lrpReport || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/LRPReport"><i class="fa fa-link"></i> <span>LRP Report</span></a></li>
+            }
+            @if (_bdgReport || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/Bdgreport"><i class="fa fa-link"></i> <span>BDG Report</span></a></li>
+            }
+        </ul>
+    </li>
+    <li class="treeview" style="height: auto;">
+        <a href="#">
+            <i class="fa fa-laptop"></i> <span>Budget</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu" style="display: none;">
+            @if (_budget || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/BdgBudget"><i class="fa fa-link"></i> <span>Budget</span></a></li>
+            }
+            @if (_bdgReport || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/BudgetReport"><i class="fa fa-link"></i> <span>BDG Report</span></a></li>
+            }
+            @if (_duplicateMasking || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/DuplicateMasking"><i class="fa fa-link"></i> <span>Duplicate Masking</span></a></li>
+            }
+            @if (_glInquiry || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/BdgLRPGL"><i class="fa fa-link"></i> <span>GL Inquiry</span></a></li>
+            }
+            @if (_glAccountMapping || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/GLAccountMapping"><i class="fa fa-link"></i> <span>GL Account Mapping</span></a></li>
+            }
+            @if (_missingMasking || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/MissingMasking"><i class="fa fa-link"></i> <span>Missing Masking</span></a></li>
+            }
+
+
+        </ul>
+    </li>
+
+    <li class="treeview" style="height: auto;">
+        <a href="#">
+            <i class="fa fa-laptop"></i> <span>User</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu" style="display: none;">
+            @if (_role || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/Role"><i class="fa fa-link"></i> <span>Role</span></a></li>
+            }
+            @if (_module || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/Module"><i class="fa fa-link"></i> <span>Module</span></a></li>
+            }
+            @if (_roleModule || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/RoleModule"><i class="fa fa-link"></i> <span>Role Module</span></a></li>
+            }
+            @if (_userAccount || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/UserAccount"><i class="fa fa-link"></i> <span>User Account</span></a></li>
+            }
+            @if (_userAccountRole || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/UserAccountRole"><i class="fa fa-link"></i> <span>User Account Role</span></a></li>
+            }
+            @if (_userAccountLRPCompany || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/UserAccountLRPCompany"><i class="fa fa-link"></i> <span>User Account LRP Company</span></a></li>
+            }
+            @if (_userAccountBdgDepartment || User.Identity.GetUserRole() == "SystemAdmin")
+            {
+                <li class="nav-item"><a class="nav-link" href="/UserAccountBdgDepartment"><i class="fa fa-link"></i> <span>User Account BDG Department</span></a></li>
+            }
+        </ul>
+    </li>
+</ul>
+

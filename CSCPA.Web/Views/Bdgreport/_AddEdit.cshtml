@@ -1,0 +1,67 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<BdgreportAddEditModel>
+    ().ID("BdgreportAddEditDevForm")
+    .ColCount(2)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.SortOrder);
+        groupItems.AddSimpleFor(m => m.ReportFile).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.ShowInCrystalViewer);
+        groupItems.AddSimpleFor(m => m.PortalId).Label(l => l.Text("Portal"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("Portal")
+        .DataSource(d => d.Mvc().Controller("Portal").LoadAction("Looku" +
+        "" +
+        "p").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.BdgcompanyId).Label(l => l.Text("Bdg Company"))
+        .Editor(e => e
+        .SelectBox()
+        .ID("Bdgcompany")
+        .DataSource(d => d.Mvc().Controller("Bdgcompany").LoadAction("Lookup").Key("ObjectUid"))
+        .DisplayExpr("Name")
+        .ValueExpr("ObjectUid")
+        );
+        groupItems.AddSimpleFor(m => m.Description)
+         .ColSpan(2)
+         .Editor(e => e
+         .TextArea()
+         .ID("Description")
+         .Height(140)
+         );
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("bdgreportAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )
+@(Html.DevExtreme().FileUploader()
+    .ID("fileUpload")
+            .Name("Report")
+            .SelectButtonText("Select Report")
+            .LabelText("")
+              .Multiple(true)
+            .Accept("*")
+            .UploadMode(FileUploadMode.UseForm)
+        )
+@*@(Html.DevExtreme().FileUploader()
+    .ID("fileMultiUpload")
+            .Name("ReportSupport")
+            .SelectButtonText("Select Report Support Files")
+            .LabelText("")
+            .Multiple(true)
+            .Accept("*")
+            .UploadMode(FileUploadMode.UseForm)
+        )*@

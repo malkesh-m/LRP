@@ -1,0 +1,55 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<UserAccountBdgDepartmentAddEditModel>
+    ().ID("UserAccountBdgDepartmentAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        // groupItems.AddSimpleFor(m => m.Name).IsRequired(true);
+        groupItems.AddSimpleFor(m => m.BdgdepartmentId).Label(l => l.Text("Department"))
+          .Editor(e => e
+          .SelectBox()
+          .DataSource(d => d.Mvc().Controller("BdgDepartment").LoadAction("Lookup").Key("ObjectUid"))
+          .DisplayExpr("Name")
+          .ValueExpr("ObjectUid").SearchEnabled(true)
+          );
+        groupItems.AddSimpleFor(m => m.UserAccountId).Label(l => l.Text("User Account"))
+           .Editor(e => e
+           .SelectBox()
+           .DataSource(d => d.Mvc().Controller("UserAccount").LoadAction("Lookup").Key("ObjectUid"))
+           .DisplayExpr("Name")
+           .ValueExpr("ObjectUid").SearchEnabled(true)
+           );
+     @*   groupItems.AddSimpleFor(m => m.InstallationUid).Label(l => l.Text("LRP Department"))
+          .Editor(e => e
+          .SelectBox()
+          .DataSource(d => d.Mvc().Controller("LRPDepartment").LoadAction("Lookup").Key("ObjectUid"))
+          .DisplayExpr("Name")
+          .ValueExpr("ObjectUid")
+          );
+
+        groupItems.AddSimpleFor(m => m.AllowSubmit).Label(l => l.Text("IsLrpDepartment")).Editor(e => e
+        .CheckBox()
+        .ID("islrpDepartment")
+        .OnValueChanged("userAccountBdgDepartmentAddEdit.onchangeisLrpDepartment")
+        );*@
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("userAccountBdgDepartmentAddEdit.save")
+        );
+    })
+    .FormData(Model)
+    )
+
+    <script>
+      @*  $(document).ready(function () {
+        debugger;
+            userAccountBdgDepartmentAddEdit.onchangeisLrpDepartment("@Model.AllowSubmit");
+    })*@
+    </script>

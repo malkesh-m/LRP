@@ -1,0 +1,7 @@
+﻿@{
+    ViewData["Title"] = "DuplicateMasking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/DuplicateMasking/_List.cshtml"); }
+<script src="~/scripts/duplicateMasking.js" asp-append-version="true"></script>

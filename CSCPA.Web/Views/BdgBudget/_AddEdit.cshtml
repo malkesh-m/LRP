@@ -1,0 +1,73 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+@model List<BdgBudgetAddEditModel>
+@*<div id="form-container">
+        <div id="BdgDepartmentForm"></div>
+    </div>*@
+
+
+
+@(Html.DevExtreme().DataGrid<BdgBudgetAddEditModel>()
+                        .ID("BdgBudgetAddEditList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .OnSelectionChanged("bdgBudgetList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("bdgBudgetList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                         .DataSource(d => d.Mvc()
+                        .Key("ObjectUID"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("bdgBudgetList.onEditorPreparing")
+                    .Columns(columns =>
+                    {
+                    columns.AddFor(m => m.BdgdepartmentId).Caption("Department")
+                .Lookup(lookup => lookup
+                .DataSource(d => d.Mvc().Controller("BdgDepartment").LoadAction("LookUp").Key("ObjectUid"))
+                .DisplayExpr("Name")
+                .ValueExpr("ObjectUid")
+                );
+
+                    columns.AddFor(m => m.YearSetupId).Visible(false);@*
+            
+                        columns.AddFor(m => m.BdgaccountGroupId).Caption("Bdg Account Group")
+          .Lookup(lookup => lookup
+          .DataSource(d => d.Mvc().Controller("BdgDepartment").LoadAction("LookUp").Key("ObjectUid"))
+          .DisplayExpr("Name")
+          .ValueExpr("ObjectUid")
+          );*@
+                        columns.AddFor(m => m.AccountName);
+                        columns.AddFor(m => m.AccountCode);
+                        columns.AddFor(m => m.YtdactualAmount).Caption("YTD Actual Amount");
+                        columns.AddFor(m => m.YtdprojectedAmount).Caption("YTD Projected Amount");
+                        columns.AddFor(m => m.PybudgetAmount).Caption("PY Budget Amount");
+                    })
+                    )
+
+<div style="margin-top:10px;width:100%">
+    <div id="success-contained" style="margin-right:0px;"></div>
+</div>
+<script>
+    $(function () {
+        $("#BdgBudgetAddEditList > div > div.dx-datagrid-header-panel").hide();
+        //var parameter = '@Model';
+        bdgBudgetAddEdit.getGridData();
+        $("#success-contained").dxButton({
+            stylingMode: "contained",
+            text: "Save",
+            type: "success",
+            width: 120,
+            onClick: function () {
+                bdgBudgetAddEdit.saveBudget();
+            }
+        });
+    })
+</script>

@@ -1,0 +1,45 @@
+﻿@using CSCPA.Model
+    @*@using (Html.BeginForm("AddEdit", "LRPCompany", FormMethod.Post, new { onsubmit = "lrpCompanyAddEdit.begin(event);" , onsuccess = "lrpCompanyAddEdit.success()" }))
+        {*@
+    @*<form action="/LRPCompany/AddEdit" method="POST" data-ajax="true" data-ajax-begin="lrpCompanyAddEdit.begin" data-ajax-complete="lrpCompanyAddEdit.complete" data-ajax-failure="lrpCompanyAddEdit.failure" data-ajax-success="lrpCompanyAddEdit.success" id="LRPCompanyAddEditForm">*@
+
+        @Html.AntiForgeryToken()
+
+        @(Html.DevExtreme().Form<LRPCompanyAddEditModel>().ID("LRPCompanyAddEditDevForm")
+            .ColCount(2)
+            .Items(items => {
+                items.AddSimpleFor(m => m.ObjectUID)
+                   .Editor(e => e
+                       .TextBox()
+                       .ReadOnly(true)
+                   );
+                items.AddSimpleFor(m => m.Name).IsRequired(true);
+                items.AddSimpleFor(m => m.Phone);
+
+                items.AddSimpleFor(m => m.Code).IsRequired(true);
+                items.AddSimpleFor(m => m.PostalCode);
+
+                items.AddSimpleFor(m => m.AddressLineI);
+                items.AddSimpleFor(m => m.AddressLineII);
+                items.AddSimpleFor(m => m.AddressLineIII);
+                items.AddSimpleFor(m => m.City);
+
+                items.AddSimpleFor(m => m.Description)
+                   .ColSpan(2)
+                   .Editor(e => e
+                       .TextArea()
+                       .Height(90)
+                   );
+                //groupItems.AddSimpleFor(m => m.CountryID);
+
+                items.AddButton()
+                    .HorizontalAlignment(HorizontalAlignment.Left)
+                    .ButtonOptions(b => b.Text("Save")
+                        .Type(ButtonType.Success)
+                        .UseSubmitBehavior(false)
+                        .OnClick("lrpCompanyAddEdit.save")
+                );
+            })
+             .FormData(Model)
+             )
+    @*</form>*@

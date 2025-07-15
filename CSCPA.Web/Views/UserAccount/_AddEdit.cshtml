@@ -1,0 +1,94 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<UserAccountAddEditModel>
+    ().ID("LRPUserAccountAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+
+        groupItems.AddGroup().ColCount(2).Items(i => {
+            i.AddSimpleFor(m => m.Username);
+
+            i.AddSimpleFor(m => m.Name).IsRequired(true);
+
+            i.AddSimpleFor(m => m.Password).Editor(e => e.TextBox().Mode(TextBoxMode.Password)); ;
+            i.AddSimpleFor(m => m.ConfirmPassword).Editor(e => e.TextBox().Mode(TextBoxMode.Password)); ;
+        });
+
+        groupItems.AddGroup().Caption("").ColCount(2).Items(i =>
+        {
+
+
+
+            i.AddGroup().Items(item =>
+            {
+                item.AddSimpleFor(m => m.AddressLineI).Label(l=> l.Text("Address"));
+
+                item.AddSimpleFor(m => m.AddressLineIi).Label(l => l.Text(" "));
+
+                item.AddSimpleFor(m => m.AddressLineIii).Label(l => l.Text(" "));
+                item.AddSimpleFor(m => m.Phone);
+            });
+            i.AddGroup().Items(item =>
+            {
+                item.AddGroup().ColCount(2).Items(items =>
+                {
+                    items.AddSimpleFor(m => m.City);
+                    items.AddSimpleFor(m => m.PostalCode).Label(l => l.Text("Postal Code"));
+
+
+                    items.AddSimpleFor(m => m.CountryId).Label(l => l.Text("Country"))
+                     .Editor(e => e
+                     .SelectBox()
+                     .ID("Country")
+                     .DataSource(d => d.Mvc().Controller("Country").LoadAction("LookUp").Key("Value"))
+                     .DisplayExpr("Text")
+                     .ValueExpr("Value")
+                     .OnValueChanged("lrpUserAccountAddEdit.onchangeCountry")
+                     );
+
+                    items.AddSimpleFor(m => m.CountryStateId).Label(l => l.Text("Country State"))
+                     .Editor(e => e
+                     .SelectBox()
+                     .ID("State")
+                     .DataSource(d => d.Mvc().Controller("CountryState").LoadAction("Lookup").Key("ObjectUid"))
+                     .DisplayExpr("Name")
+                     .ValueExpr("ObjectUid")
+                     );
+                });
+
+                item.AddSimpleFor(m => m.Email).IsRequired(true);
+
+            });
+        });
+        groupItems.AddGroup().Caption("").ColCount(2).Items(i =>
+        {
+            i.AddSimpleFor(m => m.IsInactive);
+            i.AddSimpleFor(m => m.StartupMenuId).Label(l => l.Text("Startup Menu"))
+            .Editor(e => e
+            .SelectBox()
+            .DataSource(d => d.Mvc().Controller("Menu").LoadAction("Lookup").Key("ObjectUid"))
+            .DisplayExpr("Name")
+            .ValueExpr("ObjectUid")
+            );
+            i.AddSimpleFor(m => m.DefaultPageSize);
+            i.AddSimpleFor(m => m.LocalisationId).Label(l => l.Text("Localisation"))
+            .Editor(e => e
+            .SelectBox()
+            .DataSource(d => d.Mvc().Controller("Localisation").LoadAction("Lookup").Key("ObjectUid"))
+            .DisplayExpr("Name")
+            .ValueExpr("ObjectUid")
+            );
+        });
+        groupItems.AddButton()
+    .HorizontalAlignment(HorizontalAlignment.Left)
+    .ButtonOptions(b => b.Text("Save")
+    .Type(ButtonType.Success)
+    .UseSubmitBehavior(false)
+    .OnClick("lrpUserAccountAddEdit.save")
+    );
+    })
+    .FormData(Model)
+    )

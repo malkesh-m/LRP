@@ -1,0 +1,115 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">BDG Report</h3>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="headerRightSideDiv">
+                            <div style="float:left">
+                                @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','BudgetReportList','budgetReportList') }")
+                                )
+                                @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','budgetReportList') }")
+                                )
+                            </div>
+                            <div class="templateDorpdownDiv">
+                                @(
+                                Html.DevExtreme()
+                                .SelectBox()
+                                .ID("Layouts")
+                                .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'budgetReportList']" }).Key("Value"))
+                                .DisplayExpr("Layoutname")
+                                .ValueExpr("Id")
+                                .OnValueChanged("function(e) { common.loadTemplate(e,'BudgetReportList') }")
+                                    )
+                            </div>
+                            <div style="float:left">
+                                @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','BudgetReportList','budgetReportList') }")
+                            )
+                                @*        @(Html.DevExtreme().Button()
+                                    .ID("printExcel")
+                                    .Icon("print")
+                                    .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "BudgetReport") +"'}"))*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-body table-responsive">
+                    @(Html.DevExtreme().DataGrid<BudgetReportListModel>()
+                        .ID("BudgetReportList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("budgetReportList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("budgetReportList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("BudgetReport")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("budgetReportList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.BdgreportId).Caption("BDG Report")
+             .Lookup(lookup => lookup
+             .DataSource(d => d.Mvc().Controller("BdgReport").LoadAction("LookUp").Key("ObjectUid"))
+             .DisplayExpr("Name")
+             .ValueExpr("ObjectUid"));
+
+
+
+
+
+
+
+
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { budgetReportAddEdit.showModel(e, budgetReportList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { budgetReportList.onRowRemoving(e); }");
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+                    .Paging(paging => paging.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("budgetReportList.toolbar_preparing")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>

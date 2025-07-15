@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "LRP Vendor Voucher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/LRPVendorVoucher/_List.cshtml"); }
+
+<script src="~/scripts/lrpVendorVoucher.js" asp-append-version="true"></script>

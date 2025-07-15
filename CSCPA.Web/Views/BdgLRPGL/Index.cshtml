@@ -1,0 +1,7 @@
+﻿@{
+    ViewData["Title"] = "LRPGL Transaction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("~/Views/BdgLRPGL/_List.cshtml"); }
+<script src="~/scripts/glInquiry.js" asp-append-version="true"></script>

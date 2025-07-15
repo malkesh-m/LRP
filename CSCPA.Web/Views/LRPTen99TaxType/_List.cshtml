@@ -1,0 +1,105 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Ten 99 Tax Type</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPTen99TaxTypeList','Ten99TaxTypeList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','Ten99TaxTypeList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'Ten99TaxTypeList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPTen99TaxTypeList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPTen99TaxTypeList','Ten99TaxTypeList') }")
+                            )
+                           @* @(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPTen99TaxType") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPTen99TaxTypeListModel>()
+                        .ID("LRPTen99TaxTypeList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpTen99TaxTypeList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpTen99TaxTypeList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPTen99TaxType")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpTen99TaxTypeList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Name);
+                        columns.AddFor(m => m.DescriptionBp);
+                        columns.AddFor(m => m.ValueGp);
+
+
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add().Icon("edit").OnClick("function(e) { lrpTen99TaxTypeAddEdit.showModel(e, lrpTen99TaxTypeList.refreshList); }");
+                        b.Add().Icon("trash").OnClick("function(e) { lrpTen99TaxTypeList.onRowRemoving(e); }");
+
+                    }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpTen99TaxTypeList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

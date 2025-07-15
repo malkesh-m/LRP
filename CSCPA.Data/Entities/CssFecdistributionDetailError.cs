@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
+
+namespace CSCPA.Data.Entities
+{
+    public partial class CssFecdistributionDetailError
+    {
+        public string Test { get; set; }
+    }
+}

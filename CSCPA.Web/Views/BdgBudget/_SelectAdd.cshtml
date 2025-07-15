@@ -1,0 +1,32 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<YearDepartmentModel>
+    ().ID("BdgBudgetSelectYearDepartmentDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+
+        groupItems.AddSimpleFor(m => m.Year).Label(l => l.Text("Year"))
+       .Editor(e => e
+       .SelectBox()
+       .DataSource(d => d.Mvc().Controller("BdgBudget").LoadAction("LookupYear").Key("Value"))
+        .DisplayExpr("Text")
+        .ValueExpr("Value").ID("selectYear")
+       );
+        groupItems.AddSimpleFor(m => m.Departments).Label(l => l.Text("Department"))
+        .Editor(e => e
+        .TagBox()
+        .DataSource(d => d.Mvc().Controller("BdgDepartment").LoadAction("DropLookup").Key("Value"))
+        .DisplayExpr("Text").ID("selectDepartment")
+        .ValueExpr("Value").ShowSelectionControls(true).ApplyValueMode(EditorApplyValueMode.UseButtons).SearchEnabled(true).ShowClearButton(true)
+        );
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("function(e){bdgBudgetAddEdit.saveAddBudget(e, bdgBudgetList.refreshList);}")
+        );
+    })
+    .FormData(Model)
+    )

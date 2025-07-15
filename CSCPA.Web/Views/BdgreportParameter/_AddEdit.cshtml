@@ -1,0 +1,57 @@
+﻿@using CSCPA.Model
+@Html.AntiForgeryToken()
+
+@(Html.DevExtreme().Form<BdgreportParameterAddEditModel>
+    ().ID("BdgreportParameterAddEditDevForm")
+    .ColCount(1)
+    .Items(groupItems =>
+    {
+        groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
+        groupItems.AddSimpleFor(m => m.BdgreportId).Visible(false);
+        groupItems.AddGroup().ColCount(2).Items(i =>
+        {
+            i.AddSimpleFor(m => m.ParameterDisplayName).IsRequired(true);
+            i.AddSimpleFor(m => m.ParameterDatabaseFieldName).IsRequired(true);
+
+            i.AddSimpleFor(m => m.BdgreportParameterTypeId).Label(l => l.Text("Bdg Report Parameter Type"))
+            .Editor(e => e
+            .SelectBox()
+            .ID("BdgreportParameterType")
+            .DataSource(d => d.Mvc().Controller("BdgreportParameterType").LoadAction("Lookup").Key("ObjectUid"))
+            .DisplayExpr("Name")
+            .ValueExpr("ObjectUid").OnValueChanged("bdgreportAddEdit.isDropdown")
+            );
+            i.AddSimpleFor(m => m.ParameterDefaultValue);
+            i.AddSimpleFor(m => m.SortOrder);
+            i.AddSimpleFor(m => m.Name).Label(l => l.Text("Table Name"))
+               .Editor(e => e
+               .SelectBox()
+               .ID("TableName")
+                 .DataSource(d => d.Mvc().Controller("BdgreportParameter").LoadAction("LookupTable").Key("Value"))
+                 .DisplayExpr("Text").ValueExpr("Value")
+               ).Visible(false);
+            i.AddSimpleFor(m => m.NameAlias).Label(x=> x.Text("Dropdown Text/Value(write text field,value field)")).Visible(false);
+        });
+
+        groupItems.AddSimpleFor(m => m.Description);
+
+        groupItems.AddGroup().ColCount(2).Items(i =>
+        {
+            i.AddSimpleFor(m => m.AllowMultipleValue);
+            i.AddSimpleFor(m => m.IsRangeValue);
+        });
+
+        groupItems.AddButton()
+        .ButtonOptions(b => b.Text("Save")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(false)
+        .OnClick("bdgreportAddEdit.saveParameter")
+        );
+    })
+    .FormData(Model)
+    )
+
+
+    <script>
+        $(function () { setTimeout(function () { bdgreportAddEdit.isDropdown(); }, 1500); });
+    </script>

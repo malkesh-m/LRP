@@ -1,0 +1,117 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Vendor Voucher Applicability</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPVendorVoucherApplicabilityList','VendorVoucherApplicabilityList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','VendorVoucherApplicabilityList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'VendorVoucherApplicabilityList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPVendorVoucherApplicabilityList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPVendorVoucherApplicabilityList','VendorVoucherApplicabilityList') }")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("report")
+                            .Text("Report")
+                            .OnClick("function(e) {  lrpVendorVoucherApplicabilityAddEdit.showModelParameter(e, lrpVendorVoucherApplicabilityList.refreshList);  }"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPVendorVoucherApplicabilityListModel>()
+                        .ID("LRPVendorVoucherApplicabilityList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpVendorVoucherApplicabilityList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpVendorVoucherApplicabilityList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPVendorVoucherApplicability")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpVendorVoucherApplicabilityList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.VoucherNo);
+                        columns.AddFor(m => m.AppliedAmount).Format("$ #,##0.##");
+                        columns.AddFor(m => m.AppliedToDocumentNo);
+                        columns.AddFor(m => m.DocumentDate);
+                        columns.AddFor(m => m.LrpdocumentTypeId)
+                      .Lookup(lookup => lookup
+                      .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("LookUp").Key("ObjectUid"))
+                      .DisplayExpr("Name")
+                      .ValueExpr("ObjectUid")
+                      );
+                        columns.AddFor(m => m.LrpvendorVoucherId).Caption("LRP Vendor Voucher")
+                      .Lookup(lookup => lookup
+                      .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("LookUp").Key("ObjectUid"))
+                      .DisplayExpr("Name")
+                      .ValueExpr("ObjectUid")
+                      );
+
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add().Icon("edit").OnClick("function(e) { lrpVendorVoucherApplicabilityAddEdit.showModel(e, lrpVendorVoucherApplicabilityList.refreshList); }");
+                        b.Add().Icon("trash").OnClick("function(e) { lrpVendorVoucherApplicabilityList.onRowRemoving(e); }");
+
+                    }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpVendorVoucherApplicabilityList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

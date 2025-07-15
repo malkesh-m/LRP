@@ -1,0 +1,125 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">GL Account Mapping</h3>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="headerRightSideDiv">
+                            <div style="float:left">
+                                @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','GLAccountMappingList','glAccountMappingList') }")
+                                )
+                                @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','glAccountMappingList') }")
+                                )
+                            </div>
+                            <div class="templateDorpdownDiv">
+                                @(
+                                Html.DevExtreme()
+                                .SelectBox()
+                                .ID("Layouts")
+                                .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'glAccountMappingList']" }).Key("Value"))
+                                .DisplayExpr("Layoutname")
+                                .ValueExpr("Id")
+                                .OnValueChanged("function(e) { common.loadTemplate(e,'GLAccountMappingList') }")
+                                    )
+                            </div>
+                            <div style="float:left">
+                                @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','GLAccountMappingList','glAccountMappingList') }")
+                            )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-body table-responsive">
+                    @(Html.DevExtreme().DataGrid<GLAccountMappingListModel>()
+                        .ID("GLAccountMappingList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("glAccountMappingList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("glAccountMappingList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("GLAccountMapping")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("glAccountMappingList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.BdgdepartmentId)
+                         .Lookup(lookup => lookup
+                         .DataSource(d => d.Mvc().Controller("BdgDepartment").LoadAction("LookUp").Key("ObjectUid"))
+                         .DisplayExpr("Name")
+                         .ValueExpr("ObjectUid"));
+
+                        columns.AddFor(m => m.BdgaccountGroupId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookUpGroup").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value"));
+                        columns.AddFor(m => m.BdgaccountGroupSubGroupId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookUpSub").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value"));
+                        columns.AddFor(m => m.BdgaccountGroupSubGroupSubGroupId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookUpSubSub").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value"));
+                        columns.AddFor(m => m.BdgaccountGroupSubGroupSubGroupSubGroupId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("GLAccountLookup").LoadAction("LookUpSubSubSub").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value"));
+                   
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { glAccountMappingAddEdit.showModel(e, glAccountMappingList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { glAccountMappingList.onRowRemoving(e); }");
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+                    .Paging(paging => paging.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("glAccountMappingList.toolbar_preparing")
+                    )
+                </div>
+            </div>
+        </div>
+    </div>

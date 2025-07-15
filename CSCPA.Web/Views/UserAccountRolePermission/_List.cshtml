@@ -1,0 +1,116 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">User Account Role Permission</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPUserAccountRolePermissionList','UserAccountRolePermissionList') }")
+                            )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','UserAccountRolePermissionList') }"
+                                ))
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'UserAccountRolePermissionList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPUserAccountRolePermissionList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPUserAccountRolePermissionList','UserAccountRolePermissionList') }")
+                            )
+                            @*@(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "UserAccountRole") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<UserAccountRolePermissionListModel>()
+                        .ID("LRPUserAccountRolePermissionList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpUserAccountRolePermissionList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpUserAccountRolePermissionList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("UserAccountRolePermission")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("UserAccountId")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpUserAccountRolePermissionList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.ModuleId)
+                          .Lookup(lookup => lookup
+                          .DataSource(d => d.Mvc().Controller("Module").LoadAction("LookUp").Key("ObjectUid"))
+                          .DisplayExpr("Name")
+                          .ValueExpr("ObjectUid")
+                          );
+                        columns.AddFor(m => m.UserAccountId)
+                         .Lookup(lookup => lookup
+                         .DataSource(d => d.Mvc().Controller("UserAccount").LoadAction("LookUp").Key("ObjectUid"))
+                         .DisplayExpr("Name")
+                         .ValueExpr("ObjectUid")
+                         );
+                        columns.AddFor(m => m.TableNew);
+                        columns.AddFor(m => m.TableDelete);
+                        columns.AddFor(m => m.TableCopy);
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { lrpUserAccountRolePermissionAddEdit.showModel(e, lrpUserAccountRolePermissionList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { lrpUserAccountRolePermissionList.onRowRemoving(e); }");
+
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpUserAccountRolePermissionList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

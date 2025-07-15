@@ -1,0 +1,199 @@
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Vendor Voucher</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPVendorVoucherList','VendorVoucherList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','VendorVoucherList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                    Html.DevExtreme()
+                    .SelectBox()
+                    .ID("Layouts")
+                    .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter= "['Gridid', '=', 'VendorVoucherList']" }).Key("Value"))
+                    .DisplayExpr("Layoutname")
+                    .ValueExpr("Id")
+                    .OnValueChanged("function(e) { common.loadTemplate(e,'LRPVendorVoucherList') }")
+                        )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                            .ID("SaveState")
+                            .Icon("save").Hint("Update Layout")
+                            .OnClick("function(e) { common.updateLayout('Layouts','LRPVendorVoucherList','VendorVoucherList') }")
+                            )
+                         @*   @(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPVendorVoucher") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPVendorVoucherListModel>()
+                        .ID("LRPVendorVoucherList")
+                        .ShowBorders(true)
+                        .AllowColumnReordering(true)
+                        .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                        .OnSelectionChanged("lrpVendorVoucherList.onSectionChange")
+                        .StateStoring(s => s
+                        .Enabled(true)
+                        .Type(StateStoringType.Custom)
+                        .CustomLoad("lrpVendorVoucherList.loadTemplate")
+                        .StorageKey("storage")
+                        )
+                        .DataSource(d => d.Mvc()
+                        .Controller("LRPVendorVoucher")
+                        .LoadAction("List")
+                        .UpdateAction("Put")
+                        .Key("ObjectUID")
+                        .DeleteAction("Delete"))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowDeleting(true);
+                            editing.AllowUpdating(true);
+                            editing.UseIcons(true);
+                        })
+                        .OnEditorPreparing("lrpVendorVoucherList.onEditorPreparing")
+                        .ColumnChooser(c => c
+                        .Enabled(true)
+                        .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Voided).AllowEditing(false);
+                        columns.AddFor(m => m.VoucherNo).AllowEditing(false);
+                        columns.AddFor(m => m.DocumentAmount).AllowEditing(false);
+                        columns.AddFor(m => m.DocumentNo).AllowEditing(false);
+                        columns.AddFor(m => m.Pstgdate).AllowEditing(false);
+                        columns.AddFor(m => m.InvoiceDate).AllowEditing(false);
+                        columns.AddFor(m => m.LrpdocumentTypeId).Caption("LRP Document Type")
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("LookUp").Key("ObjectUid"))
+                        .DisplayExpr("Name")
+                        .ValueExpr("ObjectUid")
+                        ).AllowEditing(false);
+                        columns.AddFor(m => m.TrxDescription).AllowEditing(false);
+                        columns.AddFor(m => m.Ten99amnt);
+                        columns.AddFor(m => m.Lrpten99TaxTypeId).Caption("1099 Tax Type")
+                       .Lookup(lookup => lookup
+                       .DataSource(d => d.Mvc().Controller("LRPTen99TaxType").LoadAction("LookUp").Key("ObjectUid"))
+                       .DisplayExpr("Name")
+                       .ValueExpr("ObjectUid")
+                       );
+                        columns.AddFor(m => m.Lrpten99BoxNoId).Caption("1099 Box No")
+                       .Lookup(lookup => lookup
+                       .DataSource(d => d.Mvc().Controller("LRPTen99BoxNo").LoadAction("LookUp").Key("ObjectUid"))
+                       .DisplayExpr("Name")
+                       .ValueExpr("ObjectUid")
+                       );
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                    .Buttons(b =>
+                    {
+                        b.Add().Icon("edit").OnClick("function(e) { lrpVendorVoucherAddEdit.showModel(e, lrpVendorVoucherList.refreshList); }");
+                        b.Add().Icon("trash").OnClick("function(e) { lrpVendorVoucherList.onRowRemoving(e); }");
+
+                    }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpVendorVoucherList.toolbar_preparing")
+                     .MasterDetail(md=>
+                     {
+                         md.Enabled(true);
+                         md.Template(@<text>
+                    <p class="box-title">LRP Vendor Voucher Applicability</p>
+                 @(Html.DevExtreme().DataGrid<LRPVendorVoucherApplicabilityListModel>()
+                               .ColumnAutoWidth(true)
+                               .ShowBorders(true)
+                               .Columns(columns =>
+                               {
+                                   columns.AddFor(m => m.VoucherNo);
+                                   columns.AddFor(m => m.AppliedAmount);
+                                   columns.AddFor(m => m.AppliedToDocumentNo);
+                                   columns.AddFor(m => m.DocumentDate);
+                                   columns.AddFor(m => m.LrpdocumentTypeId)
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().Controller("LRPDocumentType").LoadAction("LookUp").Key("ObjectUid"))
+                                 .DisplayExpr("Name")
+                                 .ValueExpr("ObjectUid")
+                                 );
+                                   columns.AddFor(m => m.LrpvendorVoucherId).Caption("LRP Vendor Voucher")
+                                 .Lookup(lookup => lookup
+                                 .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("LookUp").Key("ObjectUid"))
+                                 .DisplayExpr("Name")
+                                 .ValueExpr("ObjectUid")
+                                 );
+
+                                   columns.Add().Type(GridCommandColumnType.Buttons)
+                                       .Buttons(b =>
+                                       {
+                                           b.Add().Icon("edit").OnClick("function(e) { lrpVendorVoucherApplicabilityAddEdit.showModel(e, lrpVendorVoucherList.refreshList); }");
+                                           b.Add().Icon("trash").OnClick("function(e) { lrpVendorVoucherApplicabilityAddEdit.RemoveParameter(e); }");
+
+                                       }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                               })
+                               .DataSource(d => d.Mvc()
+                                   .Controller("LRPVendorVoucherApplicability")
+                                   .LoadAction("ListView")
+                                   .LoadParams(new { id = new JS("data.ObjectUID") })
+                               ))
+                    <p class="box-title">LRP Vendor Voucher Distribution</p>
+                  @(Html.DevExtreme().DataGrid<LRPVendorVoucherDistributionListModel>()
+                               .ColumnAutoWidth(true)
+                               .ShowBorders(true)
+                               .Columns(columns =>
+                               {
+                                   columns.AddFor(m => m.AccountNo);
+                                   columns.AddFor(m => m.AccountDescription);
+                                   columns.AddFor(m => m.CreditAmount);
+                                   columns.AddFor(m => m.DebitAmount);
+                                   columns.AddFor(m => m.LrpvendorVoucherId).Caption("LRP Vendor Voucher")
+                                     .Lookup(lookup => lookup
+                                     .DataSource(d => d.Mvc().Controller("LRPVendorVoucher").LoadAction("LookUp").Key("ObjectUid"))
+                                     .DisplayExpr("Name")
+                                     .ValueExpr("ObjectUid")
+                                     );
+
+
+                                   columns.Add().Type(GridCommandColumnType.Buttons)
+                                       .Buttons(b =>
+                                       {
+                                           b.Add().Icon("edit").OnClick("function(e) { lrpVendorVoucherDistributionAddEdit.showModel(e, lrpVendorVoucherList.refreshList); }");
+                                           b.Add().Icon("trash").OnClick("function(e) { lrpVendorVoucherDistributionAddEdit.RemoveParameter(e); }");
+
+                                       }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                               })
+                               .DataSource(d => d.Mvc()
+                                   .Controller("LRPVendorVoucherDistribution")
+                                   .LoadAction("ListView")
+                                   .LoadParams(new { id = new JS("data.ObjectUID") })
+                               ))
+                </text>);
+                    })
+                    )
+            </div>
+        </div>
+    </div>
+</div>
