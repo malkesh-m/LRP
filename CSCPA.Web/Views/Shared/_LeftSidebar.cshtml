@@ -111,6 +111,22 @@
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPTimeEntry"><i class="fa fa-link"></i> <span>LRP Time Entry</span></a></li>
                     }
+                    @if (_lrpTen99BoxNo || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPTen99BoxNo"><i class="fa fa-link"></i> <span>LRP Ten99 Box No</span></a></li>
+                    }
+                    @if (_lrpTen99TaxType || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPTen99TaxType"><i class="fa fa-link"></i> <span>LRP Ten99 Tax Type</span></a></li>
+                    }
+                    @if (_lrpVoucherStatus || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVoucherStatus"><i class="fa fa-link"></i> <span>LRP Voucher Status</span></a></li>
+                    }
+                    @if (_lrpVendorClass || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorClass"><i class="fa fa-link"></i> <span>LRP Vendor Class</span></a></li>
+                    }
                 </ul>
             </li>
             <li class="treeview" style="height: auto;">
@@ -125,15 +141,7 @@
                     @if (_lrpglTransaction || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPGLTransaction"><i class="fa fa-link"></i> <span>LRP GL Transaction</span></a></li>
-                    }
-                    @if (_lrpTen99BoxNo || User.Identity.GetUserRole() == "SystemAdmin")
-                    {
-                        <li class="nav-item"><a class="nav-link" href="/LRPTen99BoxNo"><i class="fa fa-link"></i> <span>LRP Ten99 Box No</span></a></li>
-                    }
-                    @if (_lrpTen99TaxType || User.Identity.GetUserRole() == "SystemAdmin")
-                    {
-                        <li class="nav-item"><a class="nav-link" href="/LRPTen99TaxType"><i class="fa fa-link"></i> <span>LRP Ten99 Tax Type</span></a></li>
-                    }
+                    }                  
                     @if (_lrpVendor || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPVendor"><i class="fa fa-link"></i> <span>LRP Vendor</span></a></li>
@@ -141,18 +149,21 @@
                     @if (_lrpVendorMaster || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPVendorMaster"><i class="fa fa-link"></i> <span>LRP Vendor Master</span></a></li>
-                    }
-                    @if (_lrpVoucherStatus || User.Identity.GetUserRole() == "SystemAdmin")
-                    {
-                        <li class="nav-item"><a class="nav-link" href="/LRPVoucherStatus"><i class="fa fa-link"></i> <span>LRP Voucher Status</span></a></li>
-                    }
+                    }               
+                </ul>
+            </li>
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-book"></i> <span>LRP Other</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
                     @if (_lrpVendorVoucher || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPVendorVoucher"><i class="fa fa-link"></i> <span>LRP Vendor Voucher</span></a></li>
-                    }
-                    @if (_lrpVendorClass || User.Identity.GetUserRole() == "SystemAdmin")
-                    {
-                        <li class="nav-item"><a class="nav-link" href="/LRPVendorClass"><i class="fa fa-link"></i> <span>LRP Vendor Class</span></a></li>
                     }
                     @if (_lrpVendorvoucherApplicability || User.Identity.GetUserRole() == "SystemAdmin")
                     {
@@ -174,6 +185,14 @@
                 <li class="nav-item"><a class="nav-link" href="/Bdgreport"><i class="fa fa-link"></i> <span>BDG Report</span></a></li>
             }
         </ul>
+    </li>
+    <li class="treeview" style="height: auto;">
+        <a href="#">
+            <i class="fa fa-laptop"></i> <span>LRP Import</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
     </li>
     <li class="treeview" style="height: auto;">
         <a href="#">
@@ -211,7 +230,6 @@
 
         </ul>
     </li>
-
     <li class="treeview" style="height: auto;">
         <a href="#">
             <i class="fa fa-laptop"></i> <span>User</span>

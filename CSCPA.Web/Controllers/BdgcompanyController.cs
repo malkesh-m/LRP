@@ -2,9 +2,9 @@
 using CSCPA.Model;
 using CSCPA.Service;
 using DevExtreme.AspNet.Data.ResponseModel;
-using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DevExtreme.AspNet.Mvc;
 using System;
 using System.Threading.Tasks;
 
