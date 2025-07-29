@@ -63,6 +63,7 @@ namespace CSCPA.Repo
         private GenericRepository<BdgreportGroup> _bdgreportGroupRepository;
         private GenericRepository<YesNo> _yesNoRepository;
         private GenericRepository<LrpvendorVoucherDistribution> _lrpvendorVoucherDistributionRepository;
+        private GenericRepository<LrpVendor_Reporting> _lrpVendor_ReportingRepository;
         public UnitOfWork(AppDbContext dbContext)
         {
             DbContext = dbContext;
@@ -742,6 +743,18 @@ namespace CSCPA.Repo
                     this._lrpvendorVoucherDistributionRepository = new GenericRepository<LrpvendorVoucherDistribution>(DbContext);
                 }
                 return _lrpvendorVoucherDistributionRepository;
+            }
+        }
+
+        public GenericRepository<LrpVendor_Reporting> LRPVendor_ReportingRepository
+        {
+            get
+            {
+                if (this._lrpVendor_ReportingRepository == null)
+                {
+                    this._lrpVendor_ReportingRepository = new GenericRepository<LrpVendor_Reporting>(DbContext);
+                }
+                return _lrpVendor_ReportingRepository;
             }
         }
     }

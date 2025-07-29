@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "LRP Vendor Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    await Html.RenderPartialAsync("~/Views/LRPVendorReport/_List.cshtml");
+}

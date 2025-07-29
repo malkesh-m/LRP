@@ -65,5 +65,6 @@ namespace CSCPA.Repo
         GenericRepository<BdgaccountGroupSubGroupSubGroupSubGroup> BdgaccountGroupSubGroupSubGroupSubGroupRepository { get; }
         GenericRepository<YesNo> YesNoRepository { get; }
         GenericRepository<LrpvendorVoucherDistribution> LRPVendorVoucherDistributionRepository { get; }
+        GenericRepository<LrpVendor_Reporting> LRPVendor_ReportingRepository { get; }
     }
 }

@@ -9,7 +9,7 @@
         dataGrid.clearSelection();
     },
     onSectionChnage: function (data) {
-        debugger;
+         ;
         let deleteButton = $("#Delete").dxButton("instance");
         let massUpdateButton = $("#MassUpdate").dxButton("instance");
         //let clearButton = $("#ClearUpdate").dxButton("instance");
@@ -106,7 +106,7 @@
         });
     },
     onClearBtnClick: function () {
-        debugger;
+
         $('#txtCode').dxTextBox("instance").option('value', "");
         $('#txtEmployee').dxTextBox("instance").option('value', "");
         $('#txtFinalId').dxTextBox("instance").option('value', "");

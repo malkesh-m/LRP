@@ -68,6 +68,7 @@ namespace CSCPA.Ioc
             services.AddTransient<IDuplicateMaskingService, DuplicateMaskingService>();
             services.AddTransient<IBudgetReportService, BudgetReportService>();
             services.AddTransient<ILRPVendorVoucherDistributionService, LRPVendorVoucherDistributionService>();
+            services.AddTransient<ILRPVendorReportService, LRPVendorReportService>();
         }
     }
 }

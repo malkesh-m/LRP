@@ -149,7 +149,11 @@
                     @if (_lrpVendorMaster || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPVendorMaster"><i class="fa fa-link"></i> <span>LRP Vendor Master</span></a></li>
-                    }               
+                    }       
+                    @if (_lrpVendorMaster || User.Identity.GetUserRole() == "SystemAdmin")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/LRPVendorReport"><i class="fa fa-link"></i> <span>LRP Vendor Report</span></a></li>
+                    }
                 </ul>
             </li>
             <li class="treeview" style="height: auto;">
@@ -187,7 +191,7 @@
         </ul>
     </li>
     <li class="treeview" style="height: auto;">
-        <a href="#">
+        <a href="/LRPImport">
             <i class="fa fa-laptop"></i> <span>LRP Import</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>

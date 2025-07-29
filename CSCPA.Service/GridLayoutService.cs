@@ -129,8 +129,7 @@ namespace CSCPA.Service
                    var existId =_uow.GridLayoutRepository.Query().Where(x => x.Id == layoutId).Select(x => x.Id == layoutId).FirstOrDefault();
                     if (existId)
                         return layoutId;
-                }
-                    
+                }      
             }
             
             return Layout(gridId);

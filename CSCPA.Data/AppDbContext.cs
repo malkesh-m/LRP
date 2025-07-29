@@ -705,6 +705,7 @@ namespace CSCPA.Data
         public virtual DbSet<YearsetupidTemp1> YearsetupidTemp1s { get; set; }
         public virtual DbSet<YesNo> YesNos { get; set; }
         public virtual DbSet<YesNoGrid> YesNoGrids { get; set; }
+        public virtual DbSet<LrpVendor_Reporting> LRPVendor_Reportings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38326,6 +38327,28 @@ namespace CSCPA.Data
                     .HasMaxLength(10);
 
                 entity.Property(e => e.ObjectUid).HasColumnName("ObjectUID");
+            });
+
+            modelBuilder.Entity<LrpVendor_Reporting>(entity =>
+            {
+                entity.HasKey(e => e.ObjectUID);
+                entity.Property(e => e.ObjectUID).HasDefaultValueSql("newid()");
+                entity.Property(e => e.SortOrder).HasDefaultValue(100);
+                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+                entity.Property(e => e.IsInactive).HasDefaultValue(false);
+                entity.Property(e => e.IsLocked).HasDefaultValue(false);
+                entity.Property(e => e.CreatedOn).HasDefaultValueSql("getdate()");
+                entity.Property(e => e.RecordID).ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.Country)
+                    .WithMany()
+                    .HasForeignKey(e => e.CountryID)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.Country_State)
+                    .WithMany()
+                    .HasForeignKey(e => e.Country_StateID)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             OnModelCreatingPartial(modelBuilder);
