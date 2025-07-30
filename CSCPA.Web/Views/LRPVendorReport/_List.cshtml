@@ -1,5 +1,144 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using CSCPA.Model
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-md-6">
+                    <h3 class="box-title">LRP Vendor Report</h3>
+                </div>
+                <div class="row">
+                    <div class="headerRightSideDiv">
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("AddState")
+                                .Icon("plus").Hint("Add Layout")
+                                .OnClick("function(e) { common.addLayout('Layouts','LRPVendorReportList','VendorReportList') }")
+                                )
+                            @(Html.DevExtreme().Button()
+                                .ID("DeleteState")
+                                .Icon("trash").Hint("Delete Layout")
+                                .OnClick("function(e) { common.deleteLayout('Layouts','VendorReportList') }")
+                                )
+                        </div>
+                        <div class="templateDorpdownDiv">
+                            @(
+                                Html.DevExtreme()
+                                .SelectBox()
+                                .ID("Layouts")
+                                .DataSource(d => d.Mvc().Controller("GridLayout").LoadAction("Lookup").LoadParams(new { filter = "['Gridid', '=', 'VendorReportList']" }).Key("Value"))
+                                .DisplayExpr("Layoutname")
+                                .ValueExpr("Id")
+                                .OnValueChanged("function(e) { common.loadTemplate(e,'LRPVendorReportList') }")
+                                )
+                        </div>
+                        <div style="float:left">
+                            @(Html.DevExtreme().Button()
+                                .ID("SaveState")
+                                .Icon("save").Hint("Update Layout")
+                                .OnClick("function(e) { common.updateLayout('Layouts','LRPVendorReportList','VendorReportList') }")
+                                )
+                            @*  @(Html.DevExtreme().Button()
+                            .ID("printExcel")
+                            .Icon("print")
+                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPCompany") +"'}"))*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body table-responsive">
+                @(Html.DevExtreme().DataGrid<LRPVendorReportListModel>()
+                    .ID("LRPCompanyList")
+                    .ShowBorders(true)
+                    .AllowColumnReordering(true)
+                    .Selection(selection => selection.Mode(SelectionMode.Multiple))
+                    .OnSelectionChanged("lrpVendorReportList.onSectionChnage")
+                    .StateStoring(s => s
+                    .Enabled(true)
+                    .Type(StateStoringType.Custom)
+                    .CustomLoad("lrpVendorReportList.loadTemplate")
+                    .StorageKey("storage")
+                    )
+                    .DataSource(d => d.Mvc()
+                    .Controller("LRPCompany")
+                    .LoadAction("List")
+                    .UpdateAction("Put")
+                    .Key("ObjectUID")
+                    .DeleteAction("Delete"))
+                    .Editing(editing =>
+                    {
+                        editing.Mode(GridEditMode.Batch);
+                        editing.AllowDeleting(true);
+                        editing.AllowUpdating(true);
+                        editing.UseIcons(true);
+                    })
+                    .OnEditorPreparing("lrpVendorReportList.onEditorPreparing")
+                    .ColumnChooser(c => c
+                    .Enabled(true)
+                    .Mode(GridColumnChooserMode.Select))
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.Userdef1_Reporting);
+                        columns.AddFor(m => m.Userdef2_Reporting);
+                        columns.AddFor(m => m.AddressI_Reporting);
+                        columns.AddFor(m => m.AddressII_Reporting);
+                        columns.AddFor(m => m.AddressIII_Reporting);
+                        @* columns.AddFor(m => m.State);*@
+                        columns.AddFor(m => m.PostalCode_Reporting);
+                        columns.AddFor(m => m.City_Reporting);
+                        columns.AddFor(m => m.CountryName);
+                        columns.AddFor(m => m.CountryStateName)
+                        .SetCellValue("lrpVendorReportList.setCountryValue")
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("Country").LoadAction("LookUp").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value")
+                        );
+
+
+                        @*  columns.AddFor(m => m.CountryStateId)
+                        .Lookup(lookup => lookup
+                        .DataSource("lrpCompanyList.getCountryStates")
+                        .DisplayExpr("Name")
+                        .ValueExpr("ObjectUid")
+                        );*@
+
+
+                        @*    columns.AddFor(m => m.ParentLrpcompanyId)
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("LRPCompany").LoadAction("Lookup").Key("Value"))
+                        .DisplayExpr("Text")
+                        .ValueExpr("Value")
+                        );*@
+
+
+                        columns.AddFor(m => m.Description);
+                        columns.Add().Type(GridCommandColumnType.Buttons)
+                        .Buttons(b =>
+                        {
+                            b.Add().Icon("edit").OnClick("function(e) { lrpCompanyAddEdit.showModel(e, lrpVendorReportList.refreshList); }");
+                            b.Add().Icon("trash").OnClick("function(e) { lrpVendorReportList.onRowRemoving(e); }");
+
+                        }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
+                    })
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    .OnExporting("common.exporting")
+                    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+                    .Paging(paging => paging.PageSize(10))
+                    @*.Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[10, 50 ,100, 500 ,1000 , 10000 ,20000 ,25000, 50000]"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })*@
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true).OnToolbarPreparing("lrpVendorReportList.toolbar_preparing")
+                    )
+            </div>
+        </div>
+    </div>
+</div>

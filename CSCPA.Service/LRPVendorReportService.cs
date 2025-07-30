@@ -82,7 +82,7 @@ namespace CSCPA.Service
             }
             else
             {
-                LrpVendor_Reporting entity = await _uow.LRPVendor_ReportingRepository.Get(model.ObjectUID.Value);
+                LrpVendor_Reporting entity = await _uow.LRPVendor_ReportingRepository.Get(model.ObjectUID);
                 entity = _mapper.Map<LRPVendorReportAddEditModel, LrpVendor_Reporting>(model, entity);
                 entity.UpdatedOn = DateTime.UtcNow;
                 await _uow.LRPVendor_ReportingRepository.Update(entity);
