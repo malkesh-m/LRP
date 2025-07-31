@@ -33,26 +33,45 @@ namespace CSCPA.Service
         }
         public LoadResult GetPage(DataSourceLoadOptionsBase options)
         {
-            var query = _uow.LRPVendor_ReportingRepository.Query().IgnoreAutoIncludes().Where(x => x.IsDeleted == false)
-                .Select(s => new LRPVendorReportListModel
-                {
-                    ObjectUID = s.ObjectUID,
-                    AddressI_Reporting = s.AddressI_Reporting,
-                    AddressII_Reporting = s.AddressII_Reporting,
-                    AddressIII_Reporting = s.AddressIII_Reporting,
-                    City_Reporting = s.City_Reporting,
-                    PostalCode_Reporting = s.PostalCode_Reporting,
-                    CountryID =  s.CountryID,
-                    CountryName = s.Country.Name,
-                    Country_StateID= s.Country_StateID,
-                    CountryStateName = s.Country_State.Name,
-                    Userdef1_Reporting = s.Userdef1_Reporting,
-                    Userdef2_Reporting = s.Userdef2_Reporting,
-                    Description = s.Description,
-                });
+            // Fetch data from database with joins, but no projection into custom class yet
+            var query = from s in _uow.LRPVendor_ReportingRepository.Query().IgnoreAutoIncludes()
+                        where !s.IsDeleted
+                        join country in _uow.CountryRepository.Query().IgnoreAutoIncludes()
+                            on s.CountryID equals country.ObjectUid into countryJoin
+                        from country in countryJoin.DefaultIfEmpty()
+                        join state in _uow.CountryStateRepository.Query().IgnoreAutoIncludes()
+                            on s.Country_StateID equals state.ObjectUid into stateJoin
+                        from state in stateJoin.DefaultIfEmpty()
+                        select new
+                        {
+                            s,
+                            CountryName = country != null ? country.Name : null,
+                            StateName = state != null ? state.Name : null
+                        };
 
-            return DataSourceLoader.Load(query, options);
+            // Materialize the query to switch to client-side projection
+            var data = query.ToList().Select(x => new LRPVendorReportListModel
+            {
+                ObjectUID = x.s.ObjectUID,
+                AddressI_Reporting = x.s.AddressI_Reporting,
+                AddressII_Reporting = x.s.AddressII_Reporting,
+                AddressIII_Reporting = x.s.AddressIII_Reporting,
+                City_Reporting = x.s.City_Reporting,
+                PostalCode_Reporting = x.s.PostalCode_Reporting,
+                CountryID = x.s.CountryID,
+                CountryName = x.CountryName,
+                Country_StateID = x.s.Country_StateID,
+                CountryStateName = x.StateName,
+                Userdef1_Reporting = x.s.Userdef1_Reporting,
+                Userdef2_Reporting = x.s.Userdef2_Reporting,
+                Description = x.s.Description
+            });
+
+            // Apply DevExtreme DataSourceLoader to the in-memory result
+            return DataSourceLoader.Load(data, options);
         }
+
+
         public async Task<IEnumerable<LRPVendorReportListModel>> GetAll()
         {
             return _mapper.Map<List<LRPVendorReportListModel>>(await _uow.LRPVendor_ReportingRepository.GetAll());
@@ -82,7 +101,7 @@ namespace CSCPA.Service
             }
             else
             {
-                LrpVendor_Reporting entity = await _uow.LRPVendor_ReportingRepository.Get(model.ObjectUID);
+                LrpVendor_Reporting entity = await _uow.LRPVendor_ReportingRepository.Get(model.ObjectUID.Value);
                 entity = _mapper.Map<LRPVendorReportAddEditModel, LrpVendor_Reporting>(model, entity);
                 entity.UpdatedOn = DateTime.UtcNow;
                 await _uow.LRPVendor_ReportingRepository.Update(entity);

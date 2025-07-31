@@ -266,6 +266,14 @@ namespace CSCPA.Web
             CreateMap<LRPVendorVoucherDistributionAddEditModel, LrpvendorVoucherDistribution>();
             CreateMap<LrpvendorVoucherDistribution, LRPVendorVoucherDistributionListModel>();
             #endregion
+
+            #region LRPVendorReport
+            CreateMap<LrpVendor_Reporting, LRPVendorReportListModel>();
+            CreateMap<LrpVendor_Reporting, LRPVendorReportAddEditModel>();
+            CreateMap<LRPVendorReportAddEditModel, LrpVendor_Reporting>();
+            CreateMap<Gridlayouts1, GridLayoutAddEditModel>();
+            CreateMap<GridLayoutAddEditModel, Gridlayouts1>();
+            #endregion
         }
     }
 }

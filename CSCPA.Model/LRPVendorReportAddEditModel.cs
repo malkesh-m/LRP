@@ -8,7 +8,7 @@ namespace CSCPA.Model
 {
     public class LRPVendorReportAddEditModel
     {
-        public Guid ObjectUID { get; set; }
+        public Guid? ObjectUID { get; set; }
         public string? AddressI_Reporting { get; set; }
         public string? AddressII_Reporting { get; set; }
         public string? AddressIII_Reporting { get; set; }

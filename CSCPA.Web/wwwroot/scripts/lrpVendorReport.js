@@ -1,9 +1,9 @@
 ﻿var lrpVendorReportList = {
     instance: function () {
-        return $("#LRPCompanyList").dxDataGrid("instance");
+        return $("#LRPVendorReportList").dxDataGrid("instance");
     },
     refreshList: function () {
-        $("#LRPCompanyList").dxDataGrid("instance").refresh();
+        $("#LRPVendorReportList").dxDataGrid("instance").refresh();
     },
     onSectionChnage: function (data) {
         let deleteButton = $("#Delete").dxButton("instance");
@@ -23,7 +23,7 @@
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    let dataGrid = $("#LRPCompanyList").dxDataGrid("instance");
+                    let dataGrid = $("#LRPVendorReportList").dxDataGrid("instance");
                     $.when.apply($, dataGrid.getSelectedRowsData().map(function (data) {
                         return dataGrid.getDataSource().store().remove(data.ObjectUID);
                     })).done(function () {
@@ -47,7 +47,7 @@
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    let dataGrid = $("#LRPCompanyList").dxDataGrid("instance");
+                    let dataGrid = $("#LRPVendorReportList").dxDataGrid("instance");
                     $.when(dataGrid.getDataSource().store().remove(e.row.data.ObjectUID)).done(function () {
                         dataGrid.refresh();
                     });
@@ -60,26 +60,22 @@
             e.editorOptions.disabled = (typeof e.row.data.CountryId !== "number");
         }
     },
-    getCountryStates: function (options) {
-        $.ajax({
-            url: "/CountryState/Lookup",
-            type: "GET",
-            data: { filter: options.data ? "['CountryId', '=', '" + options.data.CountryId + "']" : null },
-            success: function (data) {
-                return {
-                    store: DevExpress.data.AspNet.createStore({
-                        type: "array",
-                        loadMode: "raw",
-                        load: function () {
-                            return data.data
-                        }
-                    }),
-                }
-            },
+
+    getCountryStates: function (countryId) {
+        return new DevExpress.data.CustomStore({
+            loadMode: "raw",
+            load: function () {
+                return $.ajax({
+                    url: "/CountryState/GetLookup",
+                    type: "GET",
+                    data: { countryId: countryId }
+                }).then(function (response) {
+                    return response.data; // assumes your response is { data: [...] }
+                });
+            }
         });
-
-
     },
+
     setCountryValue: function (rowData, value) {
         rowData.CountryId = value;
         rowData.CountryStateId = null;
@@ -94,7 +90,7 @@
             options: {
                 icon: "plus",
                 onClick: function (e) {
-                    lrpCompanyAddEdit.showModel(e, lrpVendorReportList.refreshList());
+                    lrpVendorReportAddEdit.showModel(e, lrpVendorReportList.refreshList());
                 }
             }
         }, {
@@ -111,31 +107,55 @@
     }
 }
 $(function () {
-    $("#LRPCompanyList > div > div.dx-datagrid-header-panel > div > div > div.dx-toolbar-after > div:nth-child(2) > div > div").attr("id", "Delete");
+    $("#LRPVendorReportList > div > div.dx-datagrid-header-panel > div > div > div.dx-toolbar-after > div:nth-child(2) > div > div").attr("id", "Delete");
     common.getlastLayout("VendorReportList");
 })
 
-var lrpCompanyAddEdit = {
+var lrpVendorReportAddEdit = {
     hideModelCallbackData: undefined,
     onchangeCountry: function (e) {
-        $("#State").dxSelectBox("instance").getDataSource().filter(["CountryID", "=", e.value]);
-        $("#State").dxSelectBox("instance").getDataSource().reload();
-    },
+        var countryId = e.value;
+        var stateSelectBox = $("#State").dxSelectBox("instance");
 
+        if (!countryId) {
+            // Clear states if no country selected
+            stateSelectBox.option({
+                dataSource: [],
+                value: null
+            });
+            return;
+        }
+
+        // AJAX call to fetch states for selected country
+        $.ajax({
+            url: "/CountryState/Edit", // ✅ your backend endpoint
+            type: "GET",
+            data: { id: countryId },
+            success: function (response) {
+                stateSelectBox.option({
+                    dataSource: response.data, // expects array of { ObjectUID, Name }
+                    value: null // Clear previously selected state
+                });
+            },
+            error: function () {
+                console.error("Failed to load states");
+            }
+        });
+    },
     showModel: function (e, hideModelCallback) {
         var $model = $("#ModelAddEdit");
         $model.unbind("hidden.bs.modal");
         $model.on("hidden.bs.modal", function (e) {
             if (hideModelCallback) {
-                hideModelCallback(lrpCompanyAddEdit.hideModelCallbackData);
+                hideModelCallback(lrpVendorReportAddEdit.hideModelCallbackData);
                 return;
             }
         });
         var $modelBody = $model.find(".modal-body");
         $modelBody.html("");
-        $('.modal-title').text((e.row ? "Edit" : "Add") + " Company")
+        $('.modal-title').text((e.row ? "Edit" : "Add") + " LRP Vendor Report")
         $model.modal("show");
-        var url = "/LRPCompany/";
+        var url = "/LRPVendorReport/";
         if (e.row)
             url += "Edit/" + e.row.data.ObjectUID.toUpperCase();
         else
@@ -150,13 +170,13 @@ var lrpCompanyAddEdit = {
     },
 
     save: function () {
-        var validationResult = $("#LRPCompanyAddEditDevForm").dxForm("instance").validate();
+        var validationResult = $("#LRPVendorReportAddEditDevForm").dxForm("instance").validate();
         if (validationResult.isValid) {
             $.ajax({
-                url: "/LRPCompany/AddEdit",
+                url: "/LRPVendorReport/AddEdit",
                 type: "POST",
                 dataType: "json",
-                data: common.dxFormData($("#LRPCompanyAddEditDevForm")),
+                data: common.dxFormData($("#LRPVendorReportAddEditDevForm")),
                 success: function (data) {
 
                     common.showToast(data);
@@ -168,10 +188,10 @@ var lrpCompanyAddEdit = {
                     common.showErrorToast();
                 },
                 beforeSend: function () {
-                    common.showLoader($("#LRPCompanyAddEditDevForm"));
+                    common.showLoader($("#LRPVendorReportAddEditDevForm"));
                 },
                 complete: function () {
-                    common.hideLoader($("#LRPCompanyAddEditDevForm"));
+                    common.hideLoader($("#LRPVendorReportAddEditDevForm"));
                     lrpVendorReportList.refreshList();
                 }
             });

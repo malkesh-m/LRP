@@ -55,7 +55,7 @@ namespace CSCPA.Web.Controllers
             var result = await _lrpVendorReportService.Save(model);
             if (result)
             {
-                string returnText = "Company ";
+                string returnText = "LRP Vendor Report ";
                 if (model.ObjectUID == null)
                 {
                     returnText += GlobalConstant.Created;

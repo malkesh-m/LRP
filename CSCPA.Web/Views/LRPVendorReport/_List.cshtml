@@ -37,17 +37,13 @@
                                 .Icon("save").Hint("Update Layout")
                                 .OnClick("function(e) { common.updateLayout('Layouts','LRPVendorReportList','VendorReportList') }")
                                 )
-                            @*  @(Html.DevExtreme().Button()
-                            .ID("printExcel")
-                            .Icon("print")
-                            .OnClick("function(e) { location.href = '" + Url.Action("GetExcel", "LRPCompany") +"'}"))*@
                         </div>
                     </div>
                 </div>
             </div>
             <div class="box-body table-responsive">
                 @(Html.DevExtreme().DataGrid<LRPVendorReportListModel>()
-                    .ID("LRPCompanyList")
+                    .ID("LRPVendorReportList")
                     .ShowBorders(true)
                     .AllowColumnReordering(true)
                     .Selection(selection => selection.Mode(SelectionMode.Multiple))
@@ -59,7 +55,7 @@
                     .StorageKey("storage")
                     )
                     .DataSource(d => d.Mvc()
-                    .Controller("LRPCompany")
+                    .Controller("LRPVendorReport")
                     .LoadAction("List")
                     .UpdateAction("Put")
                     .Key("ObjectUID")
@@ -82,7 +78,6 @@
                         columns.AddFor(m => m.AddressI_Reporting);
                         columns.AddFor(m => m.AddressII_Reporting);
                         columns.AddFor(m => m.AddressIII_Reporting);
-                        @* columns.AddFor(m => m.State);*@
                         columns.AddFor(m => m.PostalCode_Reporting);
                         columns.AddFor(m => m.City_Reporting);
                         columns.AddFor(m => m.CountryName);
@@ -93,29 +88,11 @@
                         .DisplayExpr("Text")
                         .ValueExpr("Value")
                         );
-
-
-                        @*  columns.AddFor(m => m.CountryStateId)
-                        .Lookup(lookup => lookup
-                        .DataSource("lrpCompanyList.getCountryStates")
-                        .DisplayExpr("Name")
-                        .ValueExpr("ObjectUid")
-                        );*@
-
-
-                        @*    columns.AddFor(m => m.ParentLrpcompanyId)
-                        .Lookup(lookup => lookup
-                        .DataSource(d => d.Mvc().Controller("LRPCompany").LoadAction("Lookup").Key("Value"))
-                        .DisplayExpr("Text")
-                        .ValueExpr("Value")
-                        );*@
-
-
                         columns.AddFor(m => m.Description);
                         columns.Add().Type(GridCommandColumnType.Buttons)
                         .Buttons(b =>
                         {
-                            b.Add().Icon("edit").OnClick("function(e) { lrpCompanyAddEdit.showModel(e, lrpVendorReportList.refreshList); }");
+                            b.Add().Icon("edit").OnClick("function(e) { lrpVendorReportAddEdit.showModel(e, lrpVendorReportList.refreshList); }");
                             b.Add().Icon("trash").OnClick("function(e) { lrpVendorReportList.onRowRemoving(e); }");
 
                         }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
@@ -124,14 +101,6 @@
                     .OnExporting("common.exporting")
                     .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
                     .Paging(paging => paging.PageSize(10))
-                    @*.Pager(pager =>
-                    {
-                        pager.Visible(true);
-                        pager.ShowPageSizeSelector(true);
-                        pager.AllowedPageSizes(new JS("[10, 50 ,100, 500 ,1000 , 10000 ,20000 ,25000, 50000]"));
-                        pager.ShowInfo(true);
-                        pager.ShowNavigationButtons(true);
-                    })*@
                     .FilterRow(f => f.Visible(true))
                     .HeaderFilter(f => f.Visible(true))
                     .GroupPanel(p => p.Visible(true))
