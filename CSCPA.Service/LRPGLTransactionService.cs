@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using CSCPA.Data.Entities;
 using CSCPA.Model;
 using CSCPA.Repo;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +28,7 @@ namespace CSCPA.Service
         LoadResult GetPage(DataSourceLoadOptionsBase options, string user);
         Task<LoadResult> GetLookup(DataSourceLoadOptionsBase loadOptions);
         Task<LoadResult> GetLookupSalesTax(DataSourceLoadOptionsBase loadOptions);
+        Task<(bool success, string message, List<GLTransactionExcelModel> data)> ImportExcelAsync(IFormFile excelFile);
     }
 
     public class LRPGLTransactionService : BaseService, ILRPGLTransactionService
@@ -96,7 +100,7 @@ namespace CSCPA.Service
                     BdgaccountGroupSubGroupSubGroup = s.BdgaccountGroupSubGroupSubGroup,
                     BdgaccountGroupSubGroupSubGroupSubGroup = s.BdgaccountGroupSubGroupSubGroupSubGroup,
                     GrantNo = s.GrantNo,
-                    BdgdepartmentId2 = s.BdgdepartmentId2,
+                    //BdgdepartmentId2 = s.BdgdepartmentId2,
                 });
             if(user != "SystemAdmin")
                 query = query.Where(x => companies.Contains(x.LrpcompanyId.ToString()) && departments.Contains(x.BdgdepartmentId2.ToString()));
@@ -275,6 +279,105 @@ namespace CSCPA.Service
                 });
             return await DataSourceLoader.LoadAsync(query, loadOptions);
         }
+        public async Task<(bool success, string message, List<GLTransactionExcelModel> data)> ImportExcelAsync(IFormFile excelFile)
+        {
+            var excelData = new List<GLTransactionExcelModel>();
 
+            if (excelFile == null || excelFile.Length == 0)
+                return (false, "Uploaded file is empty.", excelData);
+
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await excelFile.CopyToAsync(stream);
+                    using (var workbook = new XLWorkbook(stream))
+                    {
+                        var worksheet = workbook.Worksheet(1); // First sheet
+                        var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Skip header
+
+                        foreach (var row in rows)
+                        {
+                            excelData.Add(new GLTransactionExcelModel
+                            {
+                                Name = row.Cell(1).GetString(),
+                                NameAlias = row.Cell(2).GetString(),
+                                ID_FIELD = row.Cell(3).GetString(),
+                                ACCT = row.Cell(4).GetString(),
+                                DESCR = row.Cell(5).GetString(),
+                                BATNBR = row.Cell(6).GetString(),
+                                CPNYID = row.Cell(7).GetString(),
+                                FISCYR = row.Cell(8).GetString(),
+                                ID = row.Cell(9).GetString(),
+                                REFNBR = row.Cell(10).GetString(),
+                                DOCNBR = row.Cell(11).GetString(),
+                                TRANDATE = DateTime.TryParse(row.Cell(12).GetString(), out var trandate) ? trandate : null,
+                                TRANDESC = row.Cell(13).GetString(),
+                                LM2_DESCRIPTION = row.Cell(14).GetString(),
+                                FINAL_ID = row.Cell(15).GetString(),
+                                LM2_CODE = row.Cell(16).GetString(),
+                                EMPLOYEE_CODE = row.Cell(17).GetString(),
+                                AMOUNT = double.TryParse(row.Cell(18).GetString(), out var amt) ? amt : null,
+                                MASTERID = row.Cell(19).GetString(),
+                                CHECKDATE = DateTime.TryParse(row.Cell(20).GetString(), out var checkdate) ? checkdate : null,
+                                CHECKNO = row.Cell(21).GetString(),
+                                LM2_FISCYR = row.Cell(22).GetString(),
+                                OldRecordID = int.TryParse(row.Cell(23).GetString(), out var oldRecordId) ? oldRecordId : (int?)null,
+                                LM2_FISCYR_ACCT = row.Cell(24).GetString(),
+                                Description = row.Cell(25).GetString()
+                            });
+                        }
+
+                        var entities = excelData.Select(item => new Lrpgltransaction
+                        {
+                            Name = item.Name,
+                            NameAlias = item.NameAlias,
+                            IdField = item.ID_FIELD,
+                            Acct = item.ACCT,
+                            Descr = item.DESCR,
+                            Batnbr = item.BATNBR,
+                            Cpnyid = item.CPNYID,
+                            Fiscyr = item.FISCYR,
+                            Id = item.ID,
+                            Refnbr = item.REFNBR,
+                            Docnbr = item.DOCNBR,
+                            Trandate = item.TRANDATE,
+                            Trandesc = item.TRANDESC,
+                            Lm2Description = item.LM2_DESCRIPTION,
+                            FinalId = item.FINAL_ID,
+                            Lm2Code = item.LM2_CODE,
+                            EmployeeCode = item.EMPLOYEE_CODE,
+                            Amount = item.AMOUNT,
+                            Masterid = item.MASTERID,
+                            Checkdate = item.CHECKDATE,
+                            Checkno = item.CHECKNO,
+                            Lm2Fiscyr = item.LM2_FISCYR,
+                            OldRecordId = item.OldRecordID,
+                            Lm2FiscyrAcct = item.LM2_FISCYR_ACCT,
+                            Description = item.Description,
+                            CreatedOn = DateTime.UtcNow,
+
+                        }).ToList();
+
+                        await _uow.LRPGLTransactionRepository.AddRange(entities);
+
+                        // 🔍 Debug: Check what's being tracked
+                        foreach (var entry in _uow.DbContext.ChangeTracker.Entries())
+                        {
+                            Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: {entry.State}");
+                        }
+
+                        var saved = await _uow.SaveAsync();
+                        return saved
+                            ? (true, "Excel imported and saved successfully.", excelData)
+                            : (false, "Failed to save data to database.", excelData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error processing Excel: {ex.Message}", excelData);
+            }
+        }
     }
 }

@@ -52,6 +52,7 @@
                                 .Icon("clear").Hint("Clear")
                                 .OnClick("lrpGLTransactionList.onClearBtnClick")
                                 )
+
                             @*  @(Html.DevExtreme().Button()
         .ID("printExcel")
         .Icon("print")
@@ -90,7 +91,17 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="col-md-12 text-right">
+                    @(Html.DevExtreme().Button()
+                        .ID("ImportExcelBtn")
+                        .Icon("upload")
+                        .Text("Import Excel")
+                        .Hint("Import Excel")
+                        .OnClick("function(e) { $('#excelImportPopup').dxPopup('instance').show(); }")
+                        )
+                </div>
+            </div>
             <div class="box-body table-responsive">
                 @(Html.DevExtreme().DataGrid<LRPGLTransactionListModel>()
                         .ID("GLTransactionList")
@@ -210,4 +221,25 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="excelImportPopup">
+    @(Html.DevExtreme().Popup()
+        .ID("excelImportPopup")
+        .Title("Import Excel")
+        .Width(400)
+        .Height(250)
+        .ShowCloseButton(true)
+        .Visible(false)
+        .ContentTemplate(@<text>
+        <div class="p-2">
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls" />
+            <br /><br />
+            @(Html.DevExtreme().Button()
+            .Text("Upload")
+            .Type(ButtonType.Success)
+            .OnClick("lrpGLTransactionList.uploadExcelFromPopup"))
+        </div>
+    </text>)
+        )
 </div>

@@ -1,4 +1,4 @@
-﻿var lrpVendorReportList = {
+﻿lrpVendorReportList = {
     instance: function () {
         return $("#LRPVendorReportList").dxDataGrid("instance");
     },
@@ -61,26 +61,32 @@
         }
     },
 
-    getCountryStates: function (countryId) {
-        return new DevExpress.data.CustomStore({
-            loadMode: "raw",
-            load: function () {
-                return $.ajax({
-                    url: "/CountryState/GetLookup",
-                    type: "GET",
-                    data: { countryId: countryId }
-                }).then(function (response) {
-                    return response.data; // assumes your response is { data: [...] }
-                });
-            }
+    getCountryStates: function (options) {
+        $.ajax({
+            url: "/CountryState/Lookup",
+            type: "GET",
+            data: { filter: options.data ? "['CountryId', '=', '" + options.data.CountryId + "']" : null },
+            success: function (data) {
+                return {
+                    store: DevExpress.data.AspNet.createStore({
+                        type: "array",
+                        loadMode: "raw",
+                        load: function () {
+                            return data.data
+                        }
+                    }),
+                }
+            },
         });
+
+
     },
 
     setCountryValue: function (rowData, value) {
-        rowData.CountryId = value;
-        rowData.CountryStateId = null;
-
+        rowData.CountryID = value;         
+        rowData.CountryStateID = null;  
     },
+
     toolbar_preparing: function (e) {
         var dataGrid = e.component;
 
@@ -114,33 +120,9 @@ $(function () {
 var lrpVendorReportAddEdit = {
     hideModelCallbackData: undefined,
     onchangeCountry: function (e) {
-        var countryId = e.value;
-        var stateSelectBox = $("#State").dxSelectBox("instance");
-
-        if (!countryId) {
-            // Clear states if no country selected
-            stateSelectBox.option({
-                dataSource: [],
-                value: null
-            });
-            return;
-        }
-
-        // AJAX call to fetch states for selected country
-        $.ajax({
-            url: "/CountryState/Edit", // ✅ your backend endpoint
-            type: "GET",
-            data: { id: countryId },
-            success: function (response) {
-                stateSelectBox.option({
-                    dataSource: response.data, // expects array of { ObjectUID, Name }
-                    value: null // Clear previously selected state
-                });
-            },
-            error: function () {
-                console.error("Failed to load states");
-            }
-        });
+        debugger
+        $("#State").dxSelectBox("instance").getDataSource().filter(["CountryID", "=", e.value]);
+        $("#State").dxSelectBox("instance").getDataSource().reload();
     },
     showModel: function (e, hideModelCallback) {
         var $model = $("#ModelAddEdit");

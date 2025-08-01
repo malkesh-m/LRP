@@ -1,6 +1,7 @@
 ﻿using CSCPA.Data;
 using CSCPA.Data.Entities;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CSCPA.Repo
@@ -71,14 +72,19 @@ namespace CSCPA.Repo
 
         public async Task<bool> SaveAsync()
         {
+            var entries = DbContext.ChangeTracker.Entries().Count();
+            Console.WriteLine("Tracked Entries: " + entries);
+
             try
             {
-                int _save = await DbContext.SaveChangesAsync();
-                return await Task.FromResult(true);
+                int result = await DbContext.SaveChangesAsync();
+                Console.WriteLine("Save result: " + result);
+                return result > 0;
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                return await Task.FromResult(false);
+                Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
         }
 

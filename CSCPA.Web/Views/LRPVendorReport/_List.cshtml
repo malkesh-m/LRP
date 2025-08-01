@@ -80,14 +80,15 @@
                         columns.AddFor(m => m.AddressIII_Reporting);
                         columns.AddFor(m => m.PostalCode_Reporting);
                         columns.AddFor(m => m.City_Reporting);
-                        columns.AddFor(m => m.CountryName);
-                        columns.AddFor(m => m.CountryStateName)
+                        columns.AddFor(m => m.CountryID)
                         .SetCellValue("lrpVendorReportList.setCountryValue")
                         .Lookup(lookup => lookup
                         .DataSource(d => d.Mvc().Controller("Country").LoadAction("LookUp").Key("Value"))
                         .DisplayExpr("Text")
                         .ValueExpr("Value")
                         );
+                        columns.AddFor(m => m.CountryStateName);
+
                         columns.AddFor(m => m.Description);
                         columns.Add().Type(GridCommandColumnType.Buttons)
                         .Buttons(b =>

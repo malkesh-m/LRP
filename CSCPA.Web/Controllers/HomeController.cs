@@ -27,7 +27,7 @@ namespace CSCPA.Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetGridState(string viewName)
+        public JsonResult GetGridState()
         {
             return Json(new JsonResponse(ResponseType.Success, "Layout saved", CSCPA_Web.Program.LrpCompanyGridState));
         }

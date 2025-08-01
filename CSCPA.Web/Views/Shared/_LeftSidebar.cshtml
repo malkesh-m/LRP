@@ -141,7 +141,7 @@
                     @if (_lrpglTransaction || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPGLTransaction"><i class="fa fa-link"></i> <span>LRP GL Transaction</span></a></li>
-                    }                  
+                    }
                     @if (_lrpVendor || User.Identity.GetUserRole() == "SystemAdmin")
                     {
                         <li class="nav-item"><a class="nav-link" href="/LRPVendor"><i class="fa fa-link"></i> <span>LRP Vendor</span></a></li>
@@ -189,14 +189,6 @@
                 <li class="nav-item"><a class="nav-link" href="/Bdgreport"><i class="fa fa-link"></i> <span>BDG Report</span></a></li>
             }
         </ul>
-    </li>
-    <li class="treeview" style="height: auto;">
-        <a href="/LRPImport">
-            <i class="fa fa-laptop"></i> <span>LRP Import</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
     </li>
     <li class="treeview" style="height: auto;">
         <a href="#">

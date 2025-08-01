@@ -124,9 +124,13 @@
             url: "/Home/GetGridState",
             type: "GET",
             dataType: "json",
-            dataType: "json",
             success: function (data) {
-                $("#GLTransactionList").dxDataGrid("instance").state(JSON.parse(data.Data));
+                if (data.Data) {
+                    const parsedState = JSON.parse(data.Data);
+                    $("#GLTransactionList").dxDataGrid("instance").state(parsedState);
+                } else {
+                    console.warn("No layout state saved.");
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 common.showErrorToast();
@@ -217,6 +221,36 @@
                 }
             }
         });
+    },
+    uploadExcelFromPopup: function () {
+        const input = document.getElementById("excelFileInput");
+        const file = input.files[0];
+
+        if (!file || !file.name.match(/\.(xls|xlsx)$/)) {
+            DevExpress.ui.notify("Please select a valid Excel file.", "warning", 3000);
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("excelFile", file);
+
+        fetch('/LRPGLTransaction/UploadExcel', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    DevExpress.ui.notify("Excel imported successfully!", "success", 3000);
+                    $("#GLTransactionList").dxDataGrid("instance").refresh();
+                    $("#excelImportPopup").dxPopup("instance").hide();
+                } else {
+                    DevExpress.ui.notify(res.message || "Import failed.", "error", 3000);
+                }
+            })
+            .catch(() => {
+                DevExpress.ui.notify("Error uploading file.", "error", 3000);
+            });
     }
 }
 $(function () {

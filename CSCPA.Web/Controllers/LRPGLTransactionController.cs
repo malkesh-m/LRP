@@ -11,6 +11,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using System.Data;
 using ClosedXML.Excel;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace CSCPA.Web.Controllers
 {
@@ -208,8 +209,6 @@ namespace CSCPA.Web.Controllers
         {
             return PartialView("/Views/LRPGLTransaction/_List.cshtml");
         }
-
-     
         [HttpGet]
         public JsonResult List(DataSourceLoadOptions options)
         {
@@ -218,9 +217,6 @@ namespace CSCPA.Web.Controllers
             var departments = User.Claims.Where(x => x.Type == "Department").Select(x => x.Value).ToList();
             return Json(_LRPGLTransactionService.GetPage(options, companies, departments,user));
         }
-
-
-
         [Authorize("Permissions.LRPGLTransaction.Create")]
         [HttpGet]
         public IActionResult Add()
@@ -297,5 +293,17 @@ namespace CSCPA.Web.Controllers
         {
             return await _LRPGLTransactionService.GetLookupSalesTax(options);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadExcel(IFormFile excelFile)
+        {
+            var (success, message, data) = await _LRPGLTransactionService.ImportExcelAsync(excelFile);
+
+            if (!success)
+                return Json(new { success = false, message });
+
+            return Json(new { success = true, message = "Excel uploaded.", count = data.Count });
+        }
+
     }
 }
