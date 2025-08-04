@@ -41,6 +41,9 @@ namespace CSCPA.Model
         public string Country { get; set; }
         public string State { get; set; }
         public string Localisation { get; set; }
+        public Guid? BDGDepartmentId { get; set; }
+        public Guid? RoleId { get; set; }
+        public Guid? LRPCompanyId { get; set; }
 
     }
     public class UserAccountListModel

@@ -18,10 +18,16 @@ namespace CSCPA.Web.Controllers
     public class UserAccountController : Controller
     {
         private readonly IUserAccountService _UserAccountService;
+        private readonly IUserAccountBdgDepartmentService _userAccountBdgDepartmentService;
+        private readonly IUserAccountLRPCompanyService _userAccountLRPCompanyService;
+        private readonly IUserAccountRoleService _userAccountRoleService;
 
-        public UserAccountController(IUserAccountService UserAccountService)
+        public UserAccountController(IUserAccountService UserAccountService, IUserAccountBdgDepartmentService userAccountBdgDepartmentService, IUserAccountLRPCompanyService userAccountLRPCompanyService, IUserAccountRoleService userAccountRoleService)
         {
             _UserAccountService = UserAccountService;
+            _userAccountBdgDepartmentService = userAccountBdgDepartmentService;
+            _userAccountLRPCompanyService = userAccountLRPCompanyService;
+            _userAccountRoleService = userAccountRoleService;
         }
 
         [Authorize("Permissions.UserAccount.View")]
@@ -132,6 +138,24 @@ namespace CSCPA.Web.Controllers
         public async Task<LoadResult> Lookup(DataSourceLoadOptions options)
         {
             return await _UserAccountService.GetLookup(options);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DepartmentGridByUserAccountId(Guid userAccountId)
+        {
+            var model = await _userAccountBdgDepartmentService.GetDepartmentByUserAsync(userAccountId);
+            return PartialView("/Views/UserAccountBdgDepartment/_List.cshtml", model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> LRPCompanyGridByUserAccountId(Guid userAccountId)
+        {
+            var model = await _userAccountLRPCompanyService.GetLRPCompanyByUserAsync(userAccountId);
+            return PartialView("/Views/UserAccountLRPCompany/_List.cshtml", model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> RoleGridByUserAccountId(Guid userAccountId)
+        {
+            var model = await _userAccountRoleService.GetRoleByUserAsync(userAccountId);
+            return PartialView("/Views/UserAccountRole/_List.cshtml", model);
         }
     }
 }

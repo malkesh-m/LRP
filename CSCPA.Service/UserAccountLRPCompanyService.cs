@@ -4,6 +4,7 @@ using CSCPA.Model;
 using CSCPA.Repo;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace CSCPA.Service
         Task<LoadResult> GetLookup(DataSourceLoadOptionsBase loadOptions);
         Task<bool> Update(Guid id, string values);
         List<string> UserCompanies(Guid userId);
+        Task<List<UserAccountLRPCompanyListModel>> GetLRPCompanyByUserAsync(Guid userId);
     }
     public class UserAccountLRPCompanyService : BaseService, IUserAccountLRPCompanyService
     {
@@ -111,6 +113,24 @@ namespace CSCPA.Service
                     Name = x.Name
                 });
             return await DataSourceLoader.LoadAsync(query, loadOptions);
+        }
+        public async Task<List<UserAccountLRPCompanyListModel>> GetLRPCompanyByUserAsync(Guid userId)
+        {
+            var list = await _uow.UserAccountLrpcompanyRepository
+                .Query()
+                .Where(x => x.UserAccountId == userId)
+                .Select(x => new UserAccountLRPCompanyListModel
+                {
+                    ObjectUID = x.ObjectUid,
+                    UserAccountId = x.UserAccountId,
+                    LrpcompanyId = x.LrpcompanyId,
+                    Display = x.Display,
+                    Name = x.Name,
+                    NameAlias = x.NameAlias
+                })
+                .ToListAsync();
+
+            return list;
         }
     }
 }

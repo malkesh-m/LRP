@@ -88,6 +88,11 @@
 
                         }).Caption("Action").Fixed(true).FixedPosition(0).AllowHiding(false);
                     })
+                    .MasterDetail(md => md
+                    .Enabled(true)
+                    .Template(new TemplateName("userAccount-details"))
+                    )
+                    .OnRowExpanded("lrpUserAccountList.onDetailExpanded")
                     .Export(e => e.Enabled(true).AllowExportSelectedData(true))
                     .OnExporting("common.exporting")
                     .Paging(p => p.PageSize(10))
@@ -98,6 +103,44 @@
                     .RemoteOperations(true).OnToolbarPreparing("lrpUserAccountList.toolbar_preparing")
                     )
             </div>
+            @using (Html.DevExtreme().NamedTemplate("userAccount-details"))
+            {
+                @(Html.DevExtreme().TabPanel()
+                    .OnSelectionChanged("lrpUserAccountList.onTabChanged")
+                    .Items(items =>
+                    {
+                        items.Add()
+                        .Title("BDG Department")
+                        .Template(new TemplateName("userAccount-details-tab1"))
+                        .Option("tabExtras", new JS("data")); // current row data
+
+                        items.Add()
+                        .Title("LRP Company")
+                        .Template(new TemplateName("userAccount-details-tab3"))
+                        .Option("tabExtras", new JS("data"));
+
+                        items.Add()
+                        .Title("Roles")
+                        .Template(new TemplateName("userAccount-details-tab2"))
+                        .Option("tabExtras", new JS("data"));
+                    })
+                    )
+            }
+            @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab1"))
+            {
+                <div id="tab-bdgDept-container-<%- tabExtras.ObjectUID %>"></div>
+            }
+
+            @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab2"))
+            {
+                <div id="tab-lrpCompany-container-<%- tabExtras.ObjectUID %>"></div>
+            }
+
+            @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab3"))
+            {
+                <div id="tab-role-container-<%- tabExtras.ObjectUID %>"></div>
+            }
+
         </div>
     </div>
 </div>

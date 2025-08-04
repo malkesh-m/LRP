@@ -330,6 +330,7 @@ namespace CSCPA.Service
 
                         var entities = excelData.Select(item => new Lrpgltransaction
                         {
+                            ObjectUid = Guid.NewGuid(),
                             Name = item.Name,
                             NameAlias = item.NameAlias,
                             IdField = item.ID_FIELD,
@@ -356,6 +357,7 @@ namespace CSCPA.Service
                             Lm2FiscyrAcct = item.LM2_FISCYR_ACCT,
                             Description = item.Description,
                             CreatedOn = DateTime.UtcNow,
+                            SortOrder = 100
 
                         }).ToList();
 

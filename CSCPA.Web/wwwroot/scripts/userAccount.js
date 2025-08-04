@@ -109,6 +109,64 @@
                 }
             }
         });
+    },
+    onTabChanged: function (e) {
+        var selectedIndex = e.component.option("selectedIndex");
+        var userId = e.component.option("items")[selectedIndex].tabExtras.ObjectUID;
+
+        console.log("Tab changed. Index:", selectedIndex, "UserId:", userId);
+
+        if (selectedIndex === 0) {
+            var deptElement = $("#tab-bdgDept-container-" + userId);
+            if (deptElement.length && $.trim(deptElement.html()) === "") {
+                console.log("Loading Department Grid...");
+                deptElement.load('/UserAccount/DepartmentGridByUserAccountId?userAccountId=' + userId, function (response, status, xhr) {
+                    console.log("Dept Tab Load Status:", status);
+                    if (status === "error") {
+                        console.error("Error loading Department tab:", xhr.status, xhr.statusText);
+                    }
+                });
+            }
+        }
+        else if (selectedIndex === 1) {
+            var lrpCompanyElement = $("#tab-lrpCompany-container-" + userId);
+            if (lrpCompanyElement.length && $.trim(lrpCompanyElement.html()) === "") {
+                console.log("Loading LRP Company Grid...");
+                lrpCompanyElement.load('/UserAccount/LRPCompanyGridByUserAccountId?userAccountId=' + userId, function (response, status, xhr) {
+                    console.log("LRP Company Tab Load Status:", status);
+                    if (status === "error") {
+                        console.error("Error loading LRP Company tab:", xhr.status, xhr.statusText);
+                    }
+                });
+            }
+        }
+        else if (selectedIndex === 2) {
+            var roleElement = $("#tab-role-container-" + userId);
+            if (roleElement.length && $.trim(roleElement.html()) === "") {
+                console.log("Loading Role Grid...");
+                roleElement.load('/UserAccount/RoleGridByUserAccountId?userAccountId=' + userId, function (response, status, xhr) {
+                    console.log("Role Tab Load Status:", status);
+                    if (status === "error") {
+                        console.error("Error loading Role tab:", xhr.status, xhr.statusText);
+                    }
+                });
+            }
+        }
+    },
+
+    onDetailExpanded: function (e) {
+        var userId = e.key;
+        console.log("Detail expanded for UserId:", userId);
+
+        var deptElement = $("#tab-bdgDept-container-" + userId);
+        if (deptElement.length && $.trim(deptElement.html()) === "") {
+            deptElement.load('/UserAccount/DepartmentGridByUserAccountId?userAccountId=' + userId, function (response, status, xhr) {
+                console.log("Default Department Tab Load Status:", status);
+                if (status === "error") {
+                    console.error("Error loading default Department tab:", xhr.status, xhr.statusText);
+                }
+            });
+        }
     }
 }
 $(function () {

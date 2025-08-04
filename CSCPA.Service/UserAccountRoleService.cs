@@ -4,6 +4,7 @@ using CSCPA.Model;
 using CSCPA.Repo;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace CSCPA.Service
         Task<LoadResult> GetLookup(DataSourceLoadOptionsBase loadOptions);
         RoleAddEditModel GetUserRole(Guid userId);
         Task<bool> Update(Guid id, string values);
+        Task<List<UserAccountRoleListModel>> GetRoleByUserAsync(Guid userId);
     }
     public class UserAccountRoleService : BaseService, IUserAccountRoleService
     {
@@ -115,6 +117,24 @@ namespace CSCPA.Service
                 return _mapper.Map<RoleAddEditModel>(_uow.RoleRepository.Query().Where(x => x.ObjectUid == roleId.RoleId).FirstOrDefault());
 
             return new RoleAddEditModel();
+        }
+        public async Task<List<UserAccountRoleListModel>> GetRoleByUserAsync(Guid userId)
+        {
+            var list = await _uow.UserAccountRoleRepository
+                .Query()
+                .Where(x => x.UserAccountId == userId)
+                .Select(x => new UserAccountRoleListModel
+                {
+                    ObjectUID = x.ObjectUid,
+                    UserAccountId = x.UserAccountId,
+                    RoleId = x.RoleId,
+                    Display = x.Display,
+                    Name = x.Name,
+                    NameAlias = x.NameAlias
+                })
+                .ToListAsync();
+
+            return list;
         }
     }
 }

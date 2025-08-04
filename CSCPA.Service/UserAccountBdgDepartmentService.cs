@@ -4,6 +4,7 @@ using CSCPA.Model;
 using CSCPA.Repo;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace CSCPA.Service
         Task<LoadResult> GetLookup(DataSourceLoadOptionsBase loadOptions);
         Task<bool> Update(Guid id, string values);
         List<string> GetDepartment(Guid userId);
+        Task<List<UserAccountBdgDepartmentListModel>> GetDepartmentByUserAsync(Guid userId);
     }
     public class UserAccountBdgDepartmentService : BaseService, IUserAccountBdgDepartmentService
     {
@@ -113,6 +115,24 @@ namespace CSCPA.Service
         {
             var list = _uow.UserAccountBdgdepartmentRepository.Query().Where(x => x.UserAccountId == userId).Select(x => x.BdgdepartmentId.ToString()).ToList();
             //list.AddRange(_uow.UserAccountBdgdepartmentRepository.Query().Where(x => x.UserAccountId == userId).Select(x => x.InstallationUid.ToString()).ToList());
+            return list;
+        }
+        public async Task<List<UserAccountBdgDepartmentListModel>> GetDepartmentByUserAsync(Guid userId)
+        {
+            var list = await _uow.UserAccountBdgdepartmentRepository
+                .Query()
+                .Where(x => x.UserAccountId == userId)
+                .Select(x => new UserAccountBdgDepartmentListModel
+                {
+                    ObjectUID = x.ObjectUid,
+                    UserAccountId = x.UserAccountId,
+                    BdgdepartmentId = x.BdgdepartmentId,
+                    Display = x.Display,
+                    Name = x.Name,
+                    NameAlias = x.NameAlias
+                })
+                .ToListAsync();
+
             return list;
         }
     }

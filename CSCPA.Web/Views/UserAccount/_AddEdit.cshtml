@@ -8,7 +8,8 @@
     {
         groupItems.AddSimpleFor(m => m.ObjectUID).Visible(false);
 
-        groupItems.AddGroup().ColCount(2).Items(i => {
+        groupItems.AddGroup().ColCount(2).Items(i =>
+        {
             i.AddSimpleFor(m => m.Username);
 
             i.AddSimpleFor(m => m.Name).IsRequired(true);
@@ -24,7 +25,7 @@
 
             i.AddGroup().Items(item =>
             {
-                item.AddSimpleFor(m => m.AddressLineI).Label(l=> l.Text("Address"));
+                item.AddSimpleFor(m => m.AddressLineI).Label(l => l.Text("Address"));
 
                 item.AddSimpleFor(m => m.AddressLineIi).Label(l => l.Text(" "));
 
