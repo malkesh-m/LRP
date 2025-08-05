@@ -40,7 +40,7 @@ namespace CSCPA.Data.Entities
         public bool ShowInCrystalViewer { get; set; }
         public string Source { get; set; }
         public Guid? PortalId { get; set; }
-        public bool? IsAdmin { get; set; }
+        //public bool? IsAdmin { get; set; }
 
         public virtual Bdgcompany Bdgcompany { get; set; }
         public virtual Portal Portal { get; set; }

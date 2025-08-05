@@ -123,15 +123,19 @@ namespace CSCPA.Service
         {
             if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(gridId))
             {
-                var layoutId = _uow.GridLayoutLoginRepository.Query().Where(x => x.Userid == userId && x.Gridid == gridId).Select(x => x.Layout).FirstOrDefault();
-                if (layoutId != null)
+                var layoutId = _uow.GridLayoutLoginRepository.Query()
+                                  .Where(x => x.Userid == userId && x.Gridid == gridId)
+                                  .Select(x => x.Layout)
+                                  .FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(layoutId))
                 {
-                   var existId =_uow.GridLayoutRepository.Query().Where(x => x.Id == layoutId).Select(x => x.Id == layoutId).FirstOrDefault();
-                    if (existId)
+                    bool exists = _uow.GridLayoutRepository.Query().Any(x => x.Id == layoutId);
+                    if (exists)
                         return layoutId;
-                }      
+                }
             }
-            
+
             return Layout(gridId);
         }
 

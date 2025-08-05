@@ -116,29 +116,29 @@
 
                         items.Add()
                         .Title("LRP Company")
-                        .Template(new TemplateName("userAccount-details-tab3"))
+                        .Template(new TemplateName("userAccount-details-tab2"))
                         .Option("tabExtras", new JS("data"));
 
                         items.Add()
                         .Title("Roles")
-                        .Template(new TemplateName("userAccount-details-tab2"))
+                        .Template(new TemplateName("userAccount-details-tab3"))
                         .Option("tabExtras", new JS("data"));
                     })
                     )
             }
             @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab1"))
             {
-                <div id="tab-bdgDept-container-<%- tabExtras.ObjectUID %>"></div>
+                <div id="tab-bdgDept-container-<%-tabExtras.ObjectUID%>"></div>
             }
 
             @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab2"))
             {
-                <div id="tab-lrpCompany-container-<%- tabExtras.ObjectUID %>"></div>
+                <div id="tab-lrpCompany-container-<%-tabExtras.ObjectUID%>"></div>
             }
 
             @using (Html.DevExtreme().NamedTemplate("userAccount-details-tab3"))
             {
-                <div id="tab-role-container-<%- tabExtras.ObjectUID %>"></div>
+                <div id="tab-role-container-<%-tabExtras.ObjectUID%>"></div>
             }
 
         </div>

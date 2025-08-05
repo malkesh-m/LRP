@@ -7372,7 +7372,7 @@ namespace CSCPA.Data
 
                 entity.Property(e => e.InstallationUid).HasColumnName("InstallationUID");
 
-                entity.Property(e => e.IsAdmin).HasDefaultValueSql("((0))");
+                //entity.Property(e => e.IsAdmin).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
