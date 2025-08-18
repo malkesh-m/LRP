@@ -82,7 +82,7 @@
                 data: { key: templateId },
                 success: function (data) {
                     common.showToast(data);
-                    debugger;
+                     ;
                     common.getlastLayout(gridId);
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -177,7 +177,7 @@
                     //columnNames = JSON.stringify({ 'columnName': columnNames });
                     //alert(columnNames);
                     //var fields = visibleRows[2].dataField;
-                    debugger;
+                     ;
                     $.ajax({
                         url: "/LRPCompany/GetExcel",
                         type: "POST",
